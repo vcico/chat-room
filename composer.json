@@ -9,6 +9,6 @@
         "workerman/mysql": "^1.0"
     },
     "autoload": {
-        "psr-4": {"Behavior\\": "Applications/Chat/Behavior"}
+        "psr-4": {"Chat\\": "Applications/Chat"}
     }
 }

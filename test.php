@@ -8,9 +8,22 @@ new container();
 
 #print_r(container::$redis);
 #print_r(container::$mysql);
+// print_r(container::$validator);
 #print container::send('1','xx');
-$result = container::$mysql->select('count(userid) as exist')->from('user')->where('username=:name')->bindValues(['name'=>'123456'])->single();
-print_r($result);
+// $result = container::$mysql->select('count(userid) as exist')->from('user')->where('username=:name')->bindValues(['name'=>'123456'])->single();
+// print_r($result);
+
+
+// $ruleLists = [
+	// [['username','password'],'required'],
+	// ['sex','integer'],
+// ];
+// $data = [
+	// 'sex' => '3',
+// ];
+
+// var_dump(container::$validator->validate($ruleLists,$data));
+// print_r(container::$validator->errors);
 
 
 

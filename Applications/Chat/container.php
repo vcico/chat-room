@@ -12,13 +12,16 @@ class container
 
 	public static $mysql;
 
+	public static $validator;
+
 	private static $_container = [];
 
 	public function __construct()
 	{
-		self::$redis  =  new Redis();
-		self::$redis->connect('127.0.0.1',6379);
-		self::$mysql =	new \Workerman\MySQL\Connection('localhost', '3306', 'root', '123456', 'chat_room');
+		// self::$redis  =  new Redis();
+		// self::$redis->connect('127.0.0.1',6379);
+		// self::$mysql =	new \Workerman\MySQL\Connection('localhost', '3306', 'root', '123456', 'chat_room');
+		self::$validator = new \Chat\Lib\validators();
 	}
 
 	/**
@@ -29,7 +32,7 @@ class container
 		if(!array_key_exists($name,self::$_container))
 		{
 			$name = ucfirst($name);
-			$className = '\Behavior\\'.$name.'Behavior';
+			$className = '\Chat\Behavior\\'.$name.'Behavior';
 			#echo $className;
 			self::$_container[$name] = new $className;
 		}

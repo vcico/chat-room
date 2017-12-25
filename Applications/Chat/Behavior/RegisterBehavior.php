@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Behavior;
+namespace Chat\Behavior;
 
 use container;
 use GatewayWorker\Lib\Gateway;

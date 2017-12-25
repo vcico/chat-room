@@ -6,9 +6,9 @@
     <link href="/css/style.css" rel="stylesheet">
 	
   <script type="text/javascript" src="/js/swfobject.js"></script>
-  <script type="text/javascript" src="/js/web_socket.js"></script>
+  <script type="text/javascript" src="/js/web_socket.js"></script>  <!--flash自动模拟websocket-->
   <script type="text/javascript" src="/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/jquery-sinaEmotion-2.1.0.min.js"></script>
+    <script type="text/javascript" src="/js/jquery-sinaEmotion-2.1.0.min.js"></script>  <!--新浪表情-->
 
   <script type="text/javascript">
     if (typeof console == "undefined") {    this.console = { log: function (msg) {  } };}

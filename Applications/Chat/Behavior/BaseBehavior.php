@@ -1,6 +1,6 @@
 <?php
 
-namespace Behavior;
+namespace Chat\Behavior;
 
 /**
  * 事件行为基类

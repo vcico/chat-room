@@ -1,6 +1,6 @@
 <?php
 
-namespace Behavior;
+namespace Chat\Behavior;
 
 /**
  * 心跳检测

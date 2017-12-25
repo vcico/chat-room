@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Behavior;
+namespace Chat\Behavior;
 
 /**
  * 用户完善资料
