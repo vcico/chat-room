@@ -15,7 +15,7 @@ use Exception;
  * required 不可缺少
  * length	字符串长度
  * 
- * 支持自定义函数  ['username' ,function($data,$field){ 
+ * 支持自定义函数  ['username' ,function($data,$rule){ 
 						return false/true;
 						// 必须返回参数 false 代表未验证通过  会使用 errorMsg
 					},'errorMsg'=>'用户名重复']

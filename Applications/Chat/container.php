@@ -8,6 +8,7 @@
  */
 class container
 {
+	const PASSWORD_PREFIX = 'chat-room-'; 
 	
 	public static $redis;
 
@@ -16,6 +17,14 @@ class container
 	public static $validator;
 
 	private static $_container = [];
+	
+	/**
+	 *  生成密码 hash
+	 */
+	public static function generatePasswordHash($password)
+	{
+		return md5(self::PASSWORD_PREFIX . $password);
+	}
 
 	/**
 	 * 解析接收到的信息 ： type和data必须的
@@ -56,9 +65,9 @@ class container
 	
 	public function __construct()
 	{
-		// self::$redis  =  new Redis();
-		// self::$redis->connect('127.0.0.1',6379);
-		// self::$mysql =	new \Workerman\MySQL\Connection('localhost', '3306', 'root', '123456', 'chat_room');
+		self::$redis  =  new Redis();
+		self::$redis->connect('127.0.0.1',6379);
+		self::$mysql =	new \Workerman\MySQL\Connection('localhost', '3306', 'root', '123456', 'chat_room');
 		self::$validator = new \Chat\Lib\validators();
 	}
 

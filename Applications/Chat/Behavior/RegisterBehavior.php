@@ -20,8 +20,9 @@ use GatewayWorker\Lib\Gateway;
 			'username' => '',
 		]]
  * ===============errCode说明===================
+ *  0  操作成功 没有错误
  *	1  数据验证失败
- *  2  添加失败
+ *  2  添加到数据库失败
  * =============================================
  */
 class RegisterBehavior extends BaseBehavior
@@ -61,6 +62,7 @@ class RegisterBehavior extends BaseBehavior
 		{
 			$msg = container::encodeMessage($message['type'],container::$validator->errors,1,'参数错误！');
 		}else{
+			$data['password'] = container::generatePasswordHash($data['password']);  // 密码加密
 			$insert_id = container::$mysql->insert('user')->cols($data)->query();
 			if($insert_id){
 				$msg = container::encodeMessage($message['type'],['username'=>$data['username'],'user_id'=>$insert_id]);
