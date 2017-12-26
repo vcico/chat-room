@@ -44,19 +44,21 @@ class Events
    {
         // debug
         echo "client:{$_SERVER['REMOTE_ADDR']}:{$_SERVER['REMOTE_PORT']} gateway:{$_SERVER['GATEWAY_ADDR']}:{$_SERVER['GATEWAY_PORT']}  client_id:$client_id session:".json_encode($_SESSION)." onMessage:".$message."\n";
-        // 客户端传递的是json数据
-        $message_data = json_decode($message, true);
-        if(!$message_data || !isset($message_data['type']))
-        {
-            return ;
-        }
+        // 客户端传递的是json数据  
+		try{
+			$message_data = container::decodeMessage($message);
+		}catch(\Exception $e){  // 如果数据格式错误 中断处理(消息被忽略)
+			// @log
+			return ;
+		}
+        
         // 根据类型执行不同的业务
 		try{
 			$behavior = $message_data['type'];
 			container::$behavior($client_id,$message_data);
-		}catch(\Exception $e)
-		{
+		}catch(\Exception $e){
 			echo $message_data['type'],' Behavior cant found';
+			// @log
 			return ;
 		}
 

@@ -8,6 +8,21 @@ use GatewayWorker\Lib\Gateway;
 
 /**
  * 注册事件
+ * ============数据结构==============
+ * 		接收 ['type'=>'','data'=>[
+			'username' => '',
+			'password' => '',
+			'repeat-password' => '',
+			'code' => '',
+		]]
+		返回 ['type'=>'','errCode' => 0 , 'info' => '操作成功/失败','data'=>[
+			'user_id' => '',
+			'username' => '',
+		]]
+ * ===============errCode说明===================
+ *	1  数据验证失败
+ *  2  添加失败
+ * =============================================
  */
 class RegisterBehavior extends BaseBehavior
 {
@@ -17,18 +32,22 @@ class RegisterBehavior extends BaseBehavior
 	 * 用户名是否已经存在
 	 * @param string $username  用户名
 	 */
-	public function exist($username)
+	public static function exist($username)
 	{
 		return (boolean)container::$mysql->select('count(userid) as exist')->from('user')->where('username=:name')->bindValues(['name'=>$username])->single();
 	}
 
 	/**
-	 * 数据检查规则
+	 * @inheritdoc
 	 */
 	public function rules()
 	{
 		return [
-			
+			[['username','password'],'required'],
+			['username',function($data,$rule){
+				return self::exist($data['username'])?false:true;
+			},'errorMsg' => '用户名已存在'],
+			['password','string','length'=>[6,32]],
 		];
 	}
 
@@ -38,15 +57,20 @@ class RegisterBehavior extends BaseBehavior
 	public function run($client_id,$message)
 	{
 		$data = $message['data'];
-
-		$insert_id = container::$mysql->insert('user')->cols($data)->query();
-		if($insert_id)
+		if(!container::$validator->validate($this->rules(),$data))
 		{
-			unset($data['password']);	
-			Gateway::sendToCurrentClient(json_encode($data));
+			$msg = container::encodeMessage($message['type'],container::$validator->errors,1,'参数错误！');
 		}else{
-			echo '出错了 怎么办？',"\n";
+			$insert_id = container::$mysql->insert('user')->cols($data)->query();
+			if($insert_id){
+				$msg = container::encodeMessage($message['type'],['username'=>$data['username'],'user_id'=>$insert_id]);
+				Gateway::setSession($client_id, ['username'=>$data['username'],'user_id'=>$insert_id]);
+			}else{
+				$msg = container::encodeMessage($message['type'],[],2,'添加用户失败 请稍后重试！');
+				// @log
+			}
 		}
+		Gateway::sendToCurrentClient($msg);
 	}
 
 }

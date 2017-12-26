@@ -8,6 +8,15 @@ namespace Chat\Behavior;
 
 abstract class BaseBehavior
 {
+	
+	/**
+	 * 数据检查规则
+	 * 所有的验证规则 验证结果都各自验证、处理 没有做统一处理 (在container调用时)
+	 */
+	public function rules(){
+		return [];
+	}
+	
 	/**
 	 * 对不同的数据类型进行处理
 	 * @param integer $clinet_id 客户端ID

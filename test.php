@@ -17,8 +17,13 @@ new container();
 // $ruleLists = [
 	// [['username','password'],'required'],
 	// ['sex','integer'],
+	// ['username',function($data,$rule){
+		// return !in_array($data['username'],['123','456']);
+	// },'errorMsg'=>'用户名已存在'],
 // ];
 // $data = [
+	// 'username' => '123',
+	// 'password' => '12345678',
 	// 'sex' => '3',
 // ];
 

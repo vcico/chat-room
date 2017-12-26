@@ -13,7 +13,12 @@ use Exception;
  * ======================================================
  * integer 	整数
  * required 不可缺少
- * # url		网址验证
+ * length	字符串长度
+ * 
+ * 支持自定义函数  ['username' ,function($data,$field){ 
+						return false/true;
+						// 必须返回参数 false 代表未验证通过  会使用 errorMsg
+					},'errorMsg'=>'用户名重复']
  * 
  */
 class validators
@@ -28,7 +33,36 @@ class validators
 		$this->errors[]= [$field,$message];
 	}
 	
-	public function integer_rule(string $field)
+	/**
+	 * 字符串参数验证规则
+	 * @param string $field 参数名称
+	 * @param array $rule 规则信息 
+	 */
+	private function string_rule($field,array $rule)
+	{
+		if(!is_string($this->data[$field]))
+		{
+			$this->addError($field,'必须为字符串');
+		}
+		if(isset($rule['length']) && is_array($rule['length']))
+		{
+			list($min,$max) = $rule['length'];
+			if($min===null || $max===null){
+				throw new Exception('字符串长度控制必须是[$min,$max]数组');
+			}
+			$count = strlen($this->data[$field]);
+			if($count < $min)	$this->addError($field,"至少需要 $min 位");
+			if($count > $max)	$this->addError($field,"不能超过 $max 位");
+		}
+	}
+	
+	
+	/**
+	 * 整型参数验证规则
+	 * @param string $field 参数名称
+	 * @param array $rule 规则信息 
+	 */
+	private function integer_rule($field,array $rule)
 	{
 		if(isset($this->data[$field]))
 		{
@@ -41,11 +75,39 @@ class validators
 		}
 	}
 	
-	private function required_rule(string $field)
+	/**
+	 * 不可缺少的参数验证规则
+	 * @param string $field 参数名称
+	 * @param array $rule 规则信息
+	 */
+	private function required_rule($field,array $rule)
 	{
 		if(!isset($this->data[$field]) || $this->data[$field] == '')
 		{
 			$this->addError($field,'该字段必须存在并且不能为空！');
+		}
+	}
+	
+	/**
+	 * 调用验证规则 类方法 或 匿名函数
+	 * @param string $field 参数名称
+	 * @param array $rule 规则信息
+	 */
+	private function callValidateFunc($field,array $rule)
+	{
+		if(is_callable($rule[1])){  // 是 自定义函数
+			$success = $rule[1]($this->data,$rule);
+			if(!$success){
+				$this->addError($field,$rule['errorMsg']);
+			}
+		}elseif(is_string($rule[1])){  // 是字符串
+			$ruleFunc = $rule[1].'_rule';
+			if(!method_exists($this,$ruleFunc)){
+				throw new Exception($ruleFunc.': validation rule method not exist');
+			}
+			$this->$ruleFunc($field,$rule);
+		}else{
+			throw new Exception('data validation rule exception: rule name must is string');
 		}
 	}
 	
@@ -60,30 +122,20 @@ class validators
 		// }
 		$this->errors = [];
 		$this->data = $data;
-		
 		foreach($ruleLists as $ruleRow)
 		{
 			if(count($ruleRow)<2)
 			{
 				throw new Exception('data validation rule exception：Rules Array must include two elements ');
-			}
-			if(!is_string($ruleRow[1]))
-			{
-				throw new Exception('data validation rule exception: rule name must is string');
-			}
-			$rule = $ruleRow[1].'_rule';
-			
+			}			
 			$fields = $ruleRow[0];
-			if(!method_exists($this,$rule)){
-				throw new Exception($rule.': validation rule method not exist');
-			}
 			if(is_string($fields))
 			{
-				$this->$rule($fields);
+				$this->callValidateFunc($fields,$ruleRow);
 			}elseif(is_array($fields)){
 				foreach($fields as $field)
 				{
-					$this->$rule($field);
+					$this->callValidateFunc($field,$ruleRow);
 				}
 			}
 		}
