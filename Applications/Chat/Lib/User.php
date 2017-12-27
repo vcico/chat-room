@@ -35,7 +35,7 @@ class User
     public static function login($client_id,$userinfo)
     {
         $token = self::generateToken($client_id, $userinfo['username']);
-        $data = ['username'=>$userinfo['username'],'user_id'=>$userinfo['userid'],'token'=>$token];
+        $data = ['username'=>$userinfo['username'],'user_id'=>$userinfo['userid']];
         Gateway::updateSession($client_id, $data);
         Container::$redis->hSet(Container::$redisKeys['user_session'],$token,$userinfo['userid']);   // 记录token
         return $token;
