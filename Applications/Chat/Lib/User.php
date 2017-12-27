@@ -38,6 +38,7 @@ class User
         $data = ['username'=>$userinfo['username'],'user_id'=>$userinfo['userid'],'token'=>$token];
         Gateway::updateSession($client_id, $data);
         Container::$redis->hSet(Container::$redisKeys['user_session'],$token,$userinfo['userid']);   // 记录token
+        return $token;
     }
     
     /**

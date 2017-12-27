@@ -12,7 +12,7 @@ use GatewayWorker\Lib\Gateway;
  * 	0 成功 无错误
  *  1 参数错误 (包括账号密码错误)
  */
-class LoginBehavior extends BaseBehavoir
+class LoginBehavior extends BaseBehavior
 {
 
 	private $userinfo;
@@ -41,12 +41,11 @@ class LoginBehavior extends BaseBehavoir
                     Gateway::sendToCurrentClient(Container::encodeMessage($message['type'],['username'=>$this->userinfo['username'],'user_id'=>$this->userinfo['userid']]));
                     return true;
 		}
-		if(!Container::$validator->validate($this->rules(),$data))
-		{
-			$msg = Container::encodeMessage($message['type'],Container::$validator->errors,1,'参数错误！');
+		if(!Container::$validator->validate($this->rules(),$data)) {
+                    $msg = Container::encodeMessage($message['type'],Container::$validator->errors,1,'参数错误！');
 		}else{
-			$msg = Container::encodeMessage($message['type'],['username'=>$this->userinfo['username'],'user_id'=>$this->userinfo['userid']]);
-			User::login($client_id, $this->userinfo);  // 登录操作
+                    $token = User::login($client_id, $this->userinfo);  // 登录操作
+                    $msg = Container::encodeMessage($message['type'],['username'=>$this->userinfo['username'],'user_id'=>$this->userinfo['userid'],'token'=>$token]);
 		}
 		Gateway::sendToCurrentClient($msg);
 	}
