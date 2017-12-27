@@ -24,16 +24,22 @@
  * 主要是处理 onMessage onClose 
  */
 use \GatewayWorker\Lib\Gateway;
+use Chat\Lib\User;
 
 class Events
 {
 
 
-	public static function onWorkerStart($businessWorker)
-	{
-		include "container.php";
-		new container();			
-	}
+    public static function onWorkerStart($businessWorker)
+    {
+            include "Container.php";
+            new Container();			
+    }
+    
+    public static function onConnect($client_id)
+    {
+        User::afterConnect($client_id);
+    }
    
    /**
     * 有消息时
@@ -43,10 +49,10 @@ class Events
    public static function onMessage($client_id, $message)
    {
         // debug
-        echo "client:{$_SERVER['REMOTE_ADDR']}:{$_SERVER['REMOTE_PORT']} gateway:{$_SERVER['GATEWAY_ADDR']}:{$_SERVER['GATEWAY_PORT']}  client_id:$client_id session:".json_encode($_SESSION)." onMessage:".$message."\n";
+        echo "client:{$_SERVER['REMOTE_ADDR']}:{$_SERVER['REMOTE_PORT']} gateway:{$_SERVER['GATEWAY_ADDR']}:1{$_SERVER['GATEWAY_PORT']}  client_id:$client_id session:".json_encode($_SESSION)." onMessage:".$message."\n";
         // 客户端传递的是json数据  
 		try{
-			$message_data = container::decodeMessage($message);
+			$message_data = Container::decodeMessage($message);
 		}catch(\Exception $e){  // 如果数据格式错误 中断处理(消息被忽略)
 			// @log
 			return ;
@@ -55,7 +61,7 @@ class Events
         // 根据类型执行不同的业务
 		try{
 			$behavior = $message_data['type'];
-			container::$behavior($client_id,$message_data);
+			Container::$behavior($client_id,$message_data);
 		}catch(\Exception $e){
 			echo $message_data['type'],' Behavior cant found';
 			// @log

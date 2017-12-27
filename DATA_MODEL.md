@@ -26,6 +26,7 @@
 	[
 		'user_id'
 		'username'
+		'token'
 	]
 
 > 用户信息完善  userinfo
@@ -45,6 +46,11 @@
 	[
 		'username'
 		'password'
+	]
+	[
+		'user_id'
+		'username'
+		'token'
 	]
 
 > 发送消息	send

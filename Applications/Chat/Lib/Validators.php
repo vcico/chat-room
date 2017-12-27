@@ -19,20 +19,46 @@ use Exception;
 						return false/true;
 						// 必须返回参数 false 代表未验证通过  会使用 errorMsg
 					},'errorMsg'=>'用户名重复']
+ * 其中之一为有效参数  ['room_id|user_id','oneOf'],
  * 
  */
-class validators
+class Validators
 {
-	
+        /**
+         * @var string 多个字段分隔符(其中之一为有效参数等会到)
+         */
+        const DELIMITER = '|';
+    
 	private $data;
 	
 	public $errors = [];
 	
 	public function addError($field,$message)
 	{
-		$this->errors[]= [$field,$message];
+            $this->errors[]= [$field,$message];
 	}
 	
+        /**
+         * 其中之一为有效参数
+         * @param string $fields 多个字段拼接成的字符串
+         */
+        public function oneOf_rule($fields,array $rule)
+        {
+            $result = false;
+            foreach(explode(self::DELIMITER, $fields) as $field)
+            {
+                if(isset($this->data[$field]) && $this->data[$field])
+                {
+                    $result = true;
+                    break;
+                }
+            }
+            if(!$result)
+            {
+                $this->addError($fields, isset($rule['errorMsg'])?$rule['errorMsg']:'至少有一个为有效参数');
+            }
+        }
+        
 	/**
 	 * 字符串参数验证规则
 	 * @param string $field 参数名称
@@ -40,20 +66,20 @@ class validators
 	 */
 	private function string_rule($field,array $rule)
 	{
-		if(!is_string($this->data[$field]))
-		{
-			$this->addError($field,'必须为字符串');
-		}
-		if(isset($rule['length']) && is_array($rule['length']))
-		{
-			list($min,$max) = $rule['length'];
-			if($min===null || $max===null){
-				throw new Exception('字符串长度控制必须是[$min,$max]数组');
-			}
-			$count = strlen($this->data[$field]);
-			if($count < $min)	$this->addError($field,"至少需要 $min 位");
-			if($count > $max)	$this->addError($field,"不能超过 $max 位");
-		}
+            if(!is_string($this->data[$field]))
+            {
+                $this->addError($field,'必须为字符串');
+            }
+            if(isset($rule['length']) && is_array($rule['length']))
+            {
+                list($min,$max) = $rule['length'];
+                if($min===null || $max===null){
+                        throw new Exception('字符串长度控制必须是[$min,$max]数组');
+                }
+                $count = strlen($this->data[$field]);
+                if($count < $min)	$this->addError($field,"至少需要 $min 位");
+                if($count > $max)	$this->addError($field,"不能超过 $max 位");
+            }
 	}
 	
 	
@@ -64,15 +90,15 @@ class validators
 	 */
 	private function integer_rule($field,array $rule)
 	{
-		if(isset($this->data[$field]))
-		{
-			if(0===strcmp($this->data[$field],(int)$this->data[$field]))
-			{
-				return true;
-			}else{
-				$this->addError($field,"必须为整数");
-			}
-		}
+            if(isset($this->data[$field]))
+            {
+                if(0===strcmp($this->data[$field],(int)$this->data[$field]))
+                {
+                    return true;
+                }else{
+                    $this->addError($field,"必须为整数");
+                }
+            }
 	}
 	
 	/**
@@ -82,10 +108,10 @@ class validators
 	 */
 	private function required_rule($field,array $rule)
 	{
-		if(!isset($this->data[$field]) || $this->data[$field] == '')
-		{
-			$this->addError($field,'该字段必须存在并且不能为空！');
-		}
+            if(!isset($this->data[$field]) || $this->data[$field] == '')
+            {
+                $this->addError($field,'该字段必须存在并且不能为空！');
+            }
 	}
 	
 	/**
@@ -113,8 +139,10 @@ class validators
 	
 	/**
 	 * 数据验证
+         * @param array $ruleLists 验证规则
+         * @param array $data 验证的数据
 	 */
-	public function validate(Array $ruleLists,Array $data)
+	public function validate(array $ruleLists,array $data)
 	{
 		// if(!$data)
 		// {

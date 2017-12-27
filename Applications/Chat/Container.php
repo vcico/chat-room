@@ -6,26 +6,31 @@
  *  以及 动态调用Behavior 只需单次实例化Behavior
  *  为保持数据格式的一致性 和 可移植性 统一在这里处理信息的解析和编码
  */
-class container
+class Container
 {
-	const PASSWORD_PREFIX = 'chat-room-'; 
 	
+        public static $redisKeys = [
+            'user_session' => 'chatroom_user_session'
+            
+        ];
+    
+	/**
+         * @var \Redis
+         */
 	public static $redis;
 
+        /**
+         * @var \Workerman\MySQL\Connection
+         */
 	public static $mysql;
 
+        /**
+         * @var \Chat\Lib\Validators
+         */
 	public static $validator;
 
 	private static $_container = [];
 	
-	/**
-	 *  生成密码 hash
-	 */
-	public static function generatePasswordHash($password)
-	{
-		return md5(self::PASSWORD_PREFIX . $password);
-	}
-
 	/**
 	 * 解析接收到的信息 ： type和data必须的
 	 * @example ['type'=>'','data'=>[]]
@@ -33,8 +38,7 @@ class container
 	 */
 	public static function decodeMessage($message)
 	{
-		if(!$message)
-		{
+		if(!$message){
 			// @log
 			throw new Exception('接收到的数据不能为空');
 		}
@@ -68,7 +72,7 @@ class container
 		self::$redis  =  new Redis();
 		self::$redis->connect('127.0.0.1',6379);
 		self::$mysql =	new \Workerman\MySQL\Connection('localhost', '3306', 'root', '123456', 'chat_room');
-		self::$validator = new \Chat\Lib\validators();
+		self::$validator = new \Chat\Lib\Validators();
 	}
 
 	/**

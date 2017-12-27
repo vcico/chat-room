@@ -2,15 +2,17 @@
 
 namespace Chat\Behavior;
 
-
 /**
- * 退出登陆
+ * 切换房间
  */
-class LogoutBehavior extends BaseBehavior 
+
+class  ChangeroomBehavior extends BaseBehavior
 {
-	
+
 	public function run($client_id,$message)
 	{
+
 	}
+
 
 }

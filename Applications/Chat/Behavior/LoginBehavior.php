@@ -2,7 +2,8 @@
 
 namespace Chat\Behavior;
 
-use container;
+use Container;
+use Chat\Lib\User;
 use GatewayWorker\Lib\Gateway;
 
 /**
@@ -16,28 +17,18 @@ class LoginBehavior extends BaseBehavoir
 
 	private $userinfo;
 
-	/**
-	 * 根据用户名获取用户信息
-	 * @param string $username  用户名
-	 */
-	public static function getUserinfo($username)
-	{
-		return container::$mysql->select('*')->from('user')->where('username=:name')->bindValues(['name'=>$username])->row();
-		// return (boolean)container::$mysql->select('count(userid) as exist')->from('user')
-		// ->where('username=:name AND password=:pswd')->bindValues(['name'=>$username,'pswd'=>container::generatePasswordHash($password)])->single();
-	}
 	
 	public function rules()
 	{
 		return [
 			[['username','password'],'required'],
 			['username',function($data,$rule){
-				$this->userinfo = self::getUserinfo($data['username']);
+				$this->userinfo = User::getUserinfoByName($data['username']);
 				return empty($this->userinfo)?false:true;
 			},'errorMsg'=>'用户名不存在'],
 			['password',function($data,$rule){ 
 				// 如果 用户名不存在 则忽略此检查(也就是当做成功处理)
-				return empty($this->userinfo) || $this->userinfo['password'] == container::generatePasswordHash($data['password']) ;
+				return empty($this->userinfo) || $this->userinfo['password'] == User::generatePasswordHash($data['password']) ;
 			},'errorMsg'=>'用户密码错误'],
 		];
 	}
@@ -45,12 +36,17 @@ class LoginBehavior extends BaseBehavoir
 	public function run($client_id,$message)
 	{
 		$data = $message['data'];
-		if(!container::$validator->validate($this->rules(),$data))
+		if(User::isLogin())  // 如果已登录  返回用户信息并返回(终止程序)
 		{
-			$msg = container::encodeMessage($message['type'],container::$validator->errors,1,'参数错误！');
+                    Gateway::sendToCurrentClient(Container::encodeMessage($message['type'],['username'=>$this->userinfo['username'],'user_id'=>$this->userinfo['userid']]));
+                    return true;
+		}
+		if(!Container::$validator->validate($this->rules(),$data))
+		{
+			$msg = Container::encodeMessage($message['type'],Container::$validator->errors,1,'参数错误！');
 		}else{
-			$msg = container::encodeMessage($message['type'],['username'=>$this->userinfo['username'],'user_id'=>$this->userinfo['userid']]);
-			Gateway::setSession($client_id, ['username'=>$this->userinfo['username'],'user_id'=>$this->userinfo['userid']]);
+			$msg = Container::encodeMessage($message['type'],['username'=>$this->userinfo['username'],'user_id'=>$this->userinfo['userid']]);
+			User::login($client_id, $this->userinfo);  // 登录操作
 		}
 		Gateway::sendToCurrentClient($msg);
 	}

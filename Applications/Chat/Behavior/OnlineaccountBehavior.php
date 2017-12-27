@@ -2,15 +2,17 @@
 
 namespace Chat\Behavior;
 
-
 /**
- * 退出登陆
+ * 在线用户请求
  */
-class LogoutBehavior extends BaseBehavior 
+
+class  OnlineaccountBehavior extends BaseBehavior
 {
-	
+
 	public function run($client_id,$message)
 	{
+
 	}
+
 
 }

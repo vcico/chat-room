@@ -3,7 +3,8 @@
 
 namespace Chat\Behavior;
 
-use container;
+use Container;
+use Chat\Lib\User;
 use GatewayWorker\Lib\Gateway;
 
 /**
@@ -35,7 +36,7 @@ class RegisterBehavior extends BaseBehavior
 	 */
 	public static function exist($username)
 	{
-		return (boolean)container::$mysql->select('count(userid) as exist')->from('user')->where('username=:name')->bindValues(['name'=>$username])->single();
+		return (boolean)Container::$mysql->select('count(userid) as exist')->from('user')->where('username=:name')->bindValues(['name'=>$username])->single();
 	}
 
 	/**
@@ -58,17 +59,18 @@ class RegisterBehavior extends BaseBehavior
 	public function run($client_id,$message)
 	{
 		$data = $message['data'];
-		if(!container::$validator->validate($this->rules(),$data))
+		if(!Container::$validator->validate($this->rules(),$data))
 		{
-			$msg = container::encodeMessage($message['type'],container::$validator->errors,1,'参数错误！');
+			$msg = Container::encodeMessage($message['type'],Container::$validator->errors,1,'参数错误！');
 		}else{
-			$data['password'] = container::generatePasswordHash($data['password']);  // 密码加密
-			$insert_id = container::$mysql->insert('user')->cols($data)->query();
+			$data['password'] = User::generatePasswordHash($data['password']);  // 密码加密
+			$insert_id = Container::$mysql->insert('user')->cols($data)->query();
 			if($insert_id){
-				$msg = container::encodeMessage($message['type'],['username'=>$data['username'],'user_id'=>$insert_id]);
-				Gateway::setSession($client_id, ['username'=>$data['username'],'user_id'=>$insert_id]);
+				$msg = Container::encodeMessage($message['type'],['username'=>$data['username'],'user_id'=>$insert_id]);
+                                $data['user_id'] = $insert_id;
+                                User::login($client_id, $data); // 登录操作（ 注册成功后无需再做登录操作 ）
 			}else{
-				$msg = container::encodeMessage($message['type'],[],2,'添加用户失败 请稍后重试！');
+				$msg = Container::encodeMessage($message['type'],[],2,'添加用户失败 请稍后重试！');
 				// @log
 			}
 		}
