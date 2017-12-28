@@ -60,13 +60,29 @@
 		'user_id'
 		'message'
 	]
-
+	[   // 消息发送方和收取方都会 收到
+		'room_id'
+		'user_id'
+		'message'
+		'from' : [
+			'username'
+			'userid'
+		]
+	]
 
 > 退出登陆  logout
 
 
-
-
+> 重新连接 恢复登录状态  restore
+	
+	[
+		'token'
+	]
+	[
+		'user_id'
+		'username'
+		'token'
+	]
 		
 	
 
