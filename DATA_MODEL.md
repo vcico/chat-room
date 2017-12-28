@@ -83,7 +83,17 @@
 		'username'
 		'token'
 	]
-		
+
+> 获取用户列表  onlineaccount
+
+	[		
+	]
+	{	# client_id : {user-session}
+		"7f00000108ff00000002":{"username":"admin","user_id":3,"room_id":1},
+		"7f00000108ff00000003":{"username":"lester","user_id":14,"room_id":1},
+		"7f00000108ff00000004":{"room_id":1},		// 游客
+		"7f00000108ff00000005":{"room_id":1}		// 游客
+	}
 	
 
 ## 推送消息(前端被动接收)  

@@ -54,9 +54,10 @@ class User
             return false;
         }
         $userinfo = self::getUserinfoById($userid);
-        self::login($client_id, $userinfo);
+        $newToken = self::login($client_id, $userinfo);
         Container::$redis->hDel(Container::$redisKeys['user_session'],$token);
-        return true;
+        $userinfo['token'] = $newToken;
+        return $userinfo;
     }
     
     /**
