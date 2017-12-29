@@ -46,6 +46,7 @@ class User
     
     /**
      * 重连时恢复
+     * @todo 未考虑到房间号
      */
     public static function restore($client_id,$token)
     {
@@ -56,6 +57,7 @@ class User
             return false;
         }
         $userinfo = self::getUserinfoById($userid);
+        // @todo 恢复之前的房间号
         $newToken = self::login($client_id, $userinfo);
         Container::$redis->hDel(Container::$redisKeys['user_session'],$token);
         $userinfo['token'] = $newToken;
@@ -63,11 +65,16 @@ class User
     }
     
     /**
-     * 退出登录 (彻底清除用户登录状态)
+     * 退出登录 (彻底清除用户登录状态) 【 删除token记录、把session恢复到未登录状态 (只有房间ID)、client_id解绑uid、 通知房间的其他用户】
      */
-    public static function afterLogout($client_id)
+    public static function logout($client_id)
     {
-        
+        $userSess = Gateway::getSession($client_id);
+        $token = self::generateToken($client_id, $userSess['username']);
+        Container::$redis->hDel(Container::$redisKeys['user_session'],$token);   // 记录token
+        Gateway::setSession($client_id, ['room_id'=>$userSess['room_id']]);
+        Gateway::unbindUid( $client_id,  $userSess['userid']);  // 断开后会自动解绑  所以重连时也是直接绑定
+        Gateway::sendToGroup(isset($userSess['room_id'])?$userSess['room_id']:self::DEFAULT_ROOM, Container::encodeMessage('unonline', $userSess));
     }
     
     /**

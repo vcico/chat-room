@@ -55,7 +55,7 @@ class Container
 	 * 编码将要发送的信息
 	 * @param string $type 消息类型
 	 * @param array $data 消息内容
-	 * @param integer $errorCode 错误码
+	 * @param integer $errCode 错误码
 	 * @param string $info 提示消息
 	 *
 	 * @example ['type'=>'','errCode' => 0 , 'info' => '发送成功/失败','data'=>[]]

@@ -9,7 +9,7 @@ use Chat\Lib\Validators;
 use \GatewayWorker\Lib\Gateway;
 /**
  * 客户端发送信息
- * ==============errorCode==============
+ * ==============errCode==============
  * -1  未登录
  * -2  用户已下线
  * 1  数据验证失败
@@ -55,7 +55,7 @@ class SendBehavior extends BaseBehavior
                     }else{
                         Gateway::sendToCurrentClient( Container::encodeMessage($message['type'], $data,-2,'对方已下线'));
 //                        ['type':'send','data':['room_id':'','user_id':1,'message':'xdfasfafsaf']]
-//                        ['type':'send','errorCode':-2,'info':'对方已下线', 'data':['room_id':'','user_id':1,'message':'xdfasfafsaf','from']]
+//                        ['type':'send','errCode':-2,'info':'对方已下线', 'data':['room_id':'','user_id':1,'message':'xdfasfafsaf','from']]
                     }
                 }
                 

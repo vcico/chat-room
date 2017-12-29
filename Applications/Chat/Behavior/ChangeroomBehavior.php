@@ -9,10 +9,10 @@ namespace Chat\Behavior;
 class  ChangeroomBehavior extends BaseBehavior
 {
 
-	public function run($client_id,$message)
-	{
-
-	}
+    public function run($client_id,$message)
+    {
+        
+    }
 
 
 }
