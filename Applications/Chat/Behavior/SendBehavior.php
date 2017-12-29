@@ -12,7 +12,6 @@ use \GatewayWorker\Lib\Gateway;
  * ==============errorCode==============
  * -1  未登录
  * -2  用户已下线
- * -3 
  * 1  数据验证失败
  * 
  */

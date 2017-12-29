@@ -30,7 +30,7 @@ class User
     }
     
     /**
-     * 用户登录 ： 绑定uid  加入房间(群组) 设置SESSION 记录Token 用于重连时恢复登录状态   
+     * 用户登录 ： 绑定uid 设置SESSION 记录Token 用于重连时恢复登录状态   
      */
     public static function login($client_id,$userinfo)
     {
@@ -39,6 +39,8 @@ class User
         Gateway::updateSession($client_id, $data);
         Container::$redis->hSet(Container::$redisKeys['user_session'],$token,$userinfo['userid']);   // 记录token
         Gateway::bindUid( $client_id,  $userinfo['userid']);  // 断开后会自动解绑  所以重连时也是直接绑定
+        $userSess = Gateway::getSession($client_id);
+        Gateway::sendToGroup(isset($userSess['room_id'])?$userSess['room_id']:self::DEFAULT_ROOM, Container::encodeMessage('online', $userSess), [$client_id]);
         return $token;
     }
     
@@ -65,6 +67,7 @@ class User
      */
     public static function afterLogout($client_id)
     {
+        
     }
     
     /**

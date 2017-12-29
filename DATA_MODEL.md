@@ -98,6 +98,10 @@
 
 ## 推送消息(前端被动接收)  
 
+>  新用户上线 通知同房间用户(排除自己)
+
+	[type=>'online',errorCode=>0,'info'=>'','data'=>['username'=>'',user_id=>,'room_id'=>]]
+
 > 聊天消息 得到回复后才发送成功
 
 	[type=>'',data=>['room_id' => , 'user_id'=> , message=>]]

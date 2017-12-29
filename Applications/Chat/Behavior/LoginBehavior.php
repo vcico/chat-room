@@ -9,7 +9,7 @@ use GatewayWorker\Lib\Gateway;
 /**
  * 登录处理类
  * ===========errorCode==============
- * 	0 成功 无错误
+ *  0 成功 无错误
  *  1 参数错误 (包括账号密码错误)
  */
 class LoginBehavior extends BaseBehavior
@@ -20,17 +20,17 @@ class LoginBehavior extends BaseBehavior
 	
 	public function rules()
 	{
-		return [
-			[['username','password'],'required'],
-			['username',function($data,$rule){
-				$this->userinfo = User::getUserinfoByName($data['username']);
-				return empty($this->userinfo)?false:true;
-			},'errorMsg'=>'用户名不存在'],
-			['password',function($data,$rule){ 
-				// 如果 用户名不存在 则忽略此检查(也就是当做成功处理)
-				return empty($this->userinfo) || $this->userinfo['password'] == User::generatePasswordHash($data['password']) ;
-			},'errorMsg'=>'用户密码错误'],
-		];
+            return [
+                [['username','password'],'required'],
+                ['username',function($data,$rule){
+                        $this->userinfo = User::getUserinfoByName($data['username']);
+                        return empty($this->userinfo)?false:true;
+                },'errorMsg'=>'用户名不存在'],
+                ['password',function($data,$rule){ 
+                        // 如果 用户名不存在 则忽略此检查(也就是当做成功处理)
+                        return empty($this->userinfo) || $this->userinfo['password'] == User::generatePasswordHash($data['password']) ;
+                },'errorMsg'=>'用户密码错误'],
+            ];
 	}
 
 	public function run($client_id,$message)
