@@ -82,10 +82,14 @@ class Container
 	{
 		if(!array_key_exists($name,self::$_container))
 		{
-			$name = ucfirst($name);
-			$className = '\Chat\Behavior\\'.$name.'Behavior';
-			#echo $className;
-			self::$_container[$name] = new $className;
+                    $name = ucfirst($name);
+                    $className = '\Chat\Behavior\\'.$name.'Behavior';
+                    #echo $className;
+                    if(!is_file(__DIR__.'/Behavior/'.$name.'Behavior.php')){
+                        // echo '这不是个文件:',__DIR__.'/Behavior/'.$name.'Behavior.php',"\n";
+                        return false;
+                    }
+                    self::$_container[$name] = new $className;
 		}
 		return call_user_func_array([self::$_container[$name],'run'],$arguments);
 	}

@@ -116,6 +116,8 @@ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 29  cd /srv/workerman-chat/
 30  composer install
 
+service mysqld start
+
 86  iptables -I INPUT -p tcp --dport 55151 -j ACCEPT
 87  iptables -I INPUT -p tcp --dport 7272 -j ACCEPT
 88  iptables save

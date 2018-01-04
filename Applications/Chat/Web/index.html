@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>利威彩票聊天室</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"; />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/static/css/init.css" />
+<link rel="stylesheet" href="/static/css/style.css" />
+
+
+<script type="text/javascript" src="static/js/jquery-3.1.0.min.js" ></script>
+<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+<script src="https://apps.bdimg.com/libs/angular-route/1.3.13/angular-route.js"></script>
+<script type="text/javascript" src="static/js/bootstrap.min.js" ></script>
+<script type="text/javascript" src="static/js/newRoute.js" ></script>
+
+<script src="/public/sources/layer/layer.js"></script>
+
+<!--〈link rel="shortcuticon" href="http://…/icon.ico"〉-->
+<link rel="Shortcut Icon" href="favicon.ico">
+</head>
+<body onresize="fnInitail()">
+
+
+<!--顶部-->
+<div id="header" class="tsnBk">
+	
+	<!--logo-->
+	<h1><img src="public/images/pic/logo.png" alt="logo" /></h1>
+	<!--logo over-->
+
+	<!--登录注册-->
+	<ul class="accountList">
+		<li id="login">登录</li>
+		<li id="register">注册</li>
+		<li id="logout">注销</li>
+	</ul>
+	<!--登录注册结束-->
+	
+</div>
+<!--顶部结束-->
+
+
+
+<div id="section">
+
+	<!--VIP AREA-->
+	<div id="vip">
+		
+		<!--客服-->
+		<div class="csd tsnBk">
+
+			<a href="http://www.baidu.com" title="QQ客户服务" target="_blank">
+				<img src="public/images/icon/qq-csd-i-con.png" alt="qq客服" />
+			</a>
+			<a href="http://www.baidu.com" title="开户平台" target="_blank">
+				<img src="public/images/icon/open.png" alt="开户平台" />
+			</a>
+
+		</div>
+		
+		<div class="vip-nav tsnBk whiteColor">
+			<span id="vip-online" class="whiteDisabledBk">在线会员(20)</span>
+			<span id="chat-admin" class="whiteBk">私聊管理</span>
+		</div>
+		<div id="vip-container" class="tsnFourBk">
+
+			<!--会员列表-->
+			<ul id="vip-box">
+				<!--<li>
+					<img class="usr_avatar" src="public/images/person/null.jpg" />
+					<span class="usr_name whiteColor">童话镇</span>
+					<img class="usr_vest" src="public/images/person/visitor.png" />
+				</li>
+				<li>
+					<img class="usr_avatar" src="public/images/person/null.jpg" />
+					<span class="usr_name whiteColor">安徒生</span>
+					<img class="usr_vest" src="public/images/person/visitor.png" />
+				</li>
+				<li>
+					<img class="usr_avatar" src="public/images/person/null.jpg" />
+					<span class="usr_name whiteColor">格林</span>
+					<img class="usr_vest" src="public/images/person/visitor.png" />
+				</li>
+				<li>
+					<img class="usr_avatar" src="public/images/person/null.jpg" />
+					<span class="usr_name whiteColor">伊索</span>
+					<img class="usr_vest" src="public/images/person/visitor.png" />
+				</li>-->
+			</ul>
+			
+			<!--私聊管理-->
+			<div id="private-chat" class="radiusBorder">
+				<div class="border-line">
+					<div class="privateServicer whiteColor">我的专属客服</div>
+				</div>
+				<div class="border-line">
+					<!--客服专员-->
+					<div class="cms">
+						<a target="_blank" href="tencent://message/?uin=2603870562&Site=qq&Menu=yes">
+							<span class="cms_avatar">
+								<img src="public/images/person/null.jpg"/>
+							</span>
+							<div class="cms_qq">
+								<span class="whiteColor">客户专员</span>
+								<span class="whiteColor">QQ233666</span>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="border-line">
+					<div class="remind whiteColor">
+						 您好！ 我是利威彩票客服专员：微微~，如果您在聊天中遇到什么问题，请随时咨询我。您的满意是我们追求的目标，感谢您一如既往的支持 吐舌头
+					</div>
+				</div>
+			</div>
+		</div>	
+	</div>
+	
+	
+	<!--VIP OVER-->	
+	
+	<div class="container-other"  ng-app="vedioPrize">
+	<!--CHATTING BEGIN-->	
+		<div id="chatting" ng-controller="myCtrl">
+			
+			<span id="private-mark">私聊</span>
+				<ul id="message-private" class="tsnBk">
+
+						<p class="whiteColor border-line">
+							<span>对话</span>
+							<span id="speakerB" class="orangeBk" title="">私聊请点击用户ID</span>
+						</p>
+						<div class="private-talk">
+							<ul id="private-list">
+								<!--<li class="left-user private-session">
+									<p><label>你的微笑</label></p>
+									<p class="private-content">你吃午饭了吗</p>
+								</li> 
+								<li class="right-user private-session">
+									<p><label>我的世界</label></p>
+									<p class="private-content"><span>你吃午饭了吗sahkjsdhfkjasfhjks </span></p>
+								</li>-->
+							</ul>
+						</div>
+						<div id="private-input">
+							<input id="private-message" type="text" value="" name="private-words" class="tsnSixBk whiteColor" />
+							<button id="private-button" type="button">发送</button>
+						</div>
+
+				</ul>
+			<!--公告-->
+			<div id="notice" class="blackBk radiusBorder">
+				<span class="whiteColor">公告：<img src="public/images/pic/loudspeakeer.png" /></span>
+				<div class="dir_wrap">
+					<marquee scrollamount="5">
+						<span class="khakiColor">❤ 天下彩计划聊天室❤本聊天室，免费为广大彩民朋友提供交流场所。彩票届大神时时报彩，大家可做参考。
+							彩票下注请认准中国福利彩票信誉平台，不做强制性，是广大彩民推举认可的安全平台。资金安全有保障，方便快捷，信誉保障。
+							观望一天不如咨询一遍 咨询QQ1917371796  QQ3177321351
+							聊一聊，老司机带你玩转彩票~
+							终于等到你啦！加入我们，每天聊一聊，思维更活跃，想法更健康，口袋更丰满~有好货一定要分享哦！
+							您好，本平台是与官网合作得福彩平台，官网统一开奖，福彩快三  有兴趣的朋友可以在此群研究！您好，充值方式如下：网银 ，支付宝转网银，银联扫码 （单笔最低50元，最高100000）  微信， （单笔最低10元，最高5000元）， QQ钱包（单笔最低10元，最高10000），如需充值请提前咨询网站在线客服哦！
+							温馨提示：本群为中国福利快三讨论群，本平台唯一注册网址www.bphev.cn(推荐代码：54672082) 我公司作为中国福利彩票合法授权的官方线上投注平台，我们始终遵循《彩票管理条例》（国务院令第554号）等有关规定，公平、公正的极力为每个会员提供便捷、最优质的购彩体验与资金保障，   特点之一：玩法简单、中奖率高     特点之二：开奖迅速、即买即兑     特点之三：全天性开奖   特点之四：网上购彩，足不出户就能赚钱www.bphev.cn【手机版本支持投注和提现】
+							本聊天室是以彩票研究，分析，判断，探讨，投注，盈利融为一体的平台。望彩票爱好者，师傅级，大神级的朋友们踊跃参与。用你们冷静思考，你们的智慧，良好的心态，群策群力。共同创富。引领朋友们再短期内赚到人生的第一桶金。本聊天室推荐信誉平台：www.bphev.cn注册代码54672082， 祝大家玩得愉快 !!!
+							温馨提示：各位彩友，近期很多黑平台（如：时时彩 导师 账号查找私聊），以高利润或者平分盈利唯有请勿轻易相信，他们会以各种方式博得您的信任，然后将您拉到钓鱼网站，已经有个别会员吃过亏进行举报，福彩中心特提醒各位群友，请勿轻易账号查找的私聊，共创一个和谐彩票聊天室，认准福彩中心隶属网站请认准本网站网址：www.bphev.cn      ----推荐代码54672082----
+							您好，我司作为中国福利彩票唯一合法授权的官方线上投注平台，我们始终遵循《彩票管理条例》(国务院令第554号)等有关规定，公平、公正的极力为每个会员提供最便捷、最优质的购彩体验与资金保障，所有的下注清单与资金往来都受公正部门合法认证，您大可放心的在我司平台进行娱乐，祝您游戏愉快、盈利多多！
+							尊敬的会员您好，如遇问题请咨询网站在线客服或联系QQ客服①1917371796②3177321351 进行咨询！</span>
+					</marquee>
+				</div>
+			</div>
+			
+			<!--信息显示窗口-->
+			<div id="message" class="tsnBk radiusBorder">
+				<ul id="message-show">
+					<li>
+						<div class="usrPic">
+							<img class="avatar" src="public/images/person/null.jpg" alt="头像" />
+							<img class="vest" src="public/images/person/vest8.png" />
+						</div>
+						<div class="usrContent">
+							<p>
+								<span class="usrName whiteColor">
+									中国福利彩票
+								</span>
+								 <i class="recordTime tsnBk">
+								 	12-10 12:30
+								 </i>
+							</p>
+							<div class="usrWords whiteColor">
+								新来的朋友有兴趣的可扫描二维码，或者直接在浏览器里登录我们的网址，然后就可以注册，有问题请咨询QQ客服哦！
+							</div>
+						</div>
+					</li>
+					
+					<li>
+						<div class="usrPic">
+							<img class="avatar" src="public/images/person/null.jpg" alt="头像" />
+							<img class="vest" src="public/images/person/vest8.png" />
+						</div>
+						<div class="usrContent">
+							<p>
+								<span class="usrName whiteColor">
+									中国福利彩票
+								</span>
+								 <i class="recordTime tsnBk">
+								 	12-10 12:30
+								 </i>
+							</p>
+							<div class="usrWords whiteColor">
+								新来的朋友有兴趣的可扫描二维码，或者直接在浏览器里登录我们的网址，然后就可以注册，有问题请咨询QQ客服哦！
+							</div>
+						</div>
+					</li>
+					
+				</ul>
+					
+			</div>
+			
+			<!--声明-->
+			<div id="statment" class="radiusBorder">
+				<div class="statContent whiteColor">您好，本平台是与官网合作的福彩平台，官网统一开奖，福彩快三 有兴趣的朋友可以在此群研究！</div>
+				<div class="playerChoice">
+					<span class="whiteColor glyphicon glyphicon-hand-right">新手帮助</span>
+					<div class="room-group">
+						<span id="room1" class="room active" title="1">房间一</span>
+						<span id="room2" class="room" title="2">房间二</span>						
+						<span id="room3" class="room" title="3">房间三</span>
+					</div>
+				</div>
+				<div class="emoticon">
+					<div class="btn-group dropup">
+						<button id="emoticon-pack" type="button" class="btn dropdown-toggle" data-toggle="dropdown"> 
+						</button>
+						<div id="img-emotion" class="dropdown-menu" role="menu">
+							<img onclick="javascript:fn_add_emoji(this.src);return false;" ng-repeat="x in pics" src="{{s_way}}{{x}}{{s_behead}}" title="给力" />
+						</div>
+					</div>
+					<!--<div class="btn-group dropup">
+						<button id="button1" type="button" class="btn dropdown-toggle" data-toggle="dropdown"> 
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#" target="_blank">赞一个</a></li>
+							<li><a href="#" target="_blank">给束花</a></li>
+						</ul>
+					</div>-->
+					<div class="chat-object">
+						<span>你对</span>
+						<span id="chat-to">大家</span>
+						<span>说</span>
+					</div>
+				</div>
+			</div>
+			<!--编辑消息-->
+			<div id="editMessage" class="tsnSixBk radiusBorder">
+				<div>
+					<div id="editText" class="tsnSixBk whiteColor" contenteditable="true"></div>
+				</div>
+				<button id="send-btn"></button>
+			</div>
+		</div>
+	<!--CHATTING OVER-->		
+		
+		
+	<!--WIN BEIGN-->		
+		<div id="win" class="tsnBk radiusBorder">
+			<div id="winLanmu">
+				<a href="#/reward" class="redBk"><span class="glyphicon glyphicon-play-circle"></span>开奖直播</a>
+				<a href="#/vedio"><span class="glyphicon glyphicon-facetime-video"></span>美女视频</a>
+			</div>
+			<div id="vedioContent" class="tsnBk">
+				<div ng-view></div>
+			</div>
+			<div id="others">
+				<ul id="others_nav">
+						<a id="actives0" onclick="javascript:fnTabAc(0);return false;" class="orangeBk whiteColor">热门活动</a>
+						<a id="actives1" onclick="javascript:fnTabAc(1);return false;" class="tsnSixBk whiteColor">利威彩票介绍</a>
+						<a id="actives2" onclick="javascript:fnTabAc(2);return false;" class="tsnSixBk whiteColor">公告</a>
+						<a id="actives3" onclick="javascript:fnTabAc(3);return false;" class="tsnSixBk whiteColor">充值公告</a>
+				</ul>
+				<div id="others_content">
+					<div id="content0" class="contentx">
+						<a href="http://www.baidu.com" title="优惠活动" target="_blank">
+							<img src="public/images/pic/avtivity1.jpg" alt="优惠" />
+						</a>
+					</div>
+					<div id="content1" class="contentx whiteColor text-content">
+						利威彩票聊天室（网址http://www.txc588.com）,成立于2014年，是一个专注于广大彩民交流讨论，集开奖 咨询 娱乐于一体的平台。成立至今已为国家元公益金募集工作做出卓越贡献。
+作为国内领先的互联网彩票交流平台，本站始终坚持组'易用、安全、便捷“”的道路让每个彩民朋友享受到安全，快捷的彩票资讯交流服务。依托网络通信和数字电视技术，通过网络，电视、手机、短信、数字电子邮件和平面媒体等多样化服务手段，为广大彩民提供全国各大互联网大型彩票以及各地彩票交流讨论咨询服务。
+欢迎广大彩民朋友咨询指导QQ：①1917371796  ②3177321351
+					</div>
+					<div id="content2" class="contentx whiteColor text-content">
+					大家火热聊起来！交流进步购彩的同时，本聊天室为中国福利彩票讨论聊天室
+					本平台唯一注册网址www.bphev.cn(推荐代码：54672082) 
+					我公司作为中国福利彩票合法授权的官方线上投注平台，
+					我们始终遵循《彩票管理条例》（国务院令第554号）等有关规定，
+					公平、公正的极力为每个会员提供便捷、最优质的购彩体验与资金保障，
+					特点之一：玩法简单、中奖率高
+					特点之二：开奖迅速、即买即兑
+					特点之三：全天性开奖，全天80期早8点-晚22点半
+					特点之四：网上购彩，足不出户就能赚钱
+					www.bphev.cn【手机版本支持投注和提现】
+					享受每一天的美好！
+					</div>
+					<div id="content3" class="contentx whiteColor text-content">
+						尊敬的会员您好：
+
+         充值方式如下：       1.网银                （单笔最低50元，最高100000元） 
+                                     2.支付宝转网银（单笔最低50元，最高100000元）
+                                     3.银联扫码        （单笔最低50元，最高100000元） 
+                                     4. 微信                （单笔最低10元，最高 5000元 ） 
+                                     5.QQ钱包           （单笔最低10元，最高10000元）
+                                      如有充值或提现方面问题请咨询网站在线客服哦！
+					</div>
+				</div>
+			</div>
+		</div>
+	<!--WIN OVER-->	
+	</div>
+	<!--登录-->
+</div>
+
+
+
+<!--登录-->
+<div id="registerPage">
+	<div id="wrap_register" class="tsnForthBk"></div>
+	<div id="registerForm">
+		<div id="closeForm">
+			<span>×</span>
+		</div>
+		<div class="form-head">
+			<span id="check-bar">登录</span>
+			<span id="register-bar">注册</span>
+			<div id="line-bottom"></div>
+		</div>
+		<div id="form-content">
+			<form id="form-login" class="bs-example bs-example-form" role="form">
+				<div class="input-group">
+					<span class="input-group-addon"><label class="glyphicon glyphicon-user" for="username"></label></span>
+					<input id="username" type="text" name="username" class="form-control" placeholder="请输入用户名" value="" />
+				</div>
+				<br />
+				<div class="input-group">
+					<span class="input-group-addon"><label class="glyphicon glyphicon-lock" for="password"></label></span>
+					<input id="password" type="password" name="password" class="form-control" placeholder="请输入密码" value="" />
+				</div>
+				<br />
+				<div class="input-group">
+					<button type="reset" id="reset-btn"  class="btn-style left-distance2">重置</button>
+					<button id="login-btn" type="button" class="btn-style left-distance6">登录</button>
+				</div>
+			</form>
+			<form id="form-register" class="bs-example bs-example-form" role="form">
+				<div class="input-group">
+					<span class="input-group-addon"><label class="glyphicon glyphicon-user" for="username"></label></span>
+					<input id="username" type="text" name="username" class="form-control" placeholder="请输入用户名,长度为3-7个字符" value="" />
+				</div>
+				<br />
+				<div class="input-group">
+					<span class="input-group-addon"><label class="glyphicon glyphicon-lock" for="password"></label></span>
+					<input id="password" type="password" name="password" class="form-control" placeholder="请输入密码,长度为6-16个字符" value="" />
+				</div>
+				<br />
+				<div class="input-group">
+					<span class="input-group-addon"><label class="glyphicon glyphicon-lock" for="password_check"></label></span>
+					<input id="password_check" type="password" name="repeat-password" class="form-control" placeholder="确认密码,两次密码输入应一致" value="" />
+				</div>
+				<br />
+				<div class="input-group">
+					<button type="reset" id="reset-btn"  class="btn-style left-distance2">重置</button>
+					<button id="register-btn" type="button" class="btn-style left-distance6">注册</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!--<div>
+	
+	
+</div>-->
+
+
+<!--弹窗-->
+<div id="alert-remind">
+	<div id="alert-content">
+		您已在直播室收听5分钟，赶紧领取会员，点击上方注册会员或联系左上方QQ在线客服，即刻享受更多优质服务。
+	</div>
+	<div class="alert-checkin">
+		<button type="button" value="登录">登录</button>
+		<button type="button" value="注册">注册</button>
+	</div>
+	
+	<div id="alert-close">
+		
+	</div>
+</div>
+
+
+
+
+
+<script type="text/javascript" src="static/js/controlStyle.js" ></script>
+<!--<script type="text/javascript" src="static/js/socket.js"></script>-->
+<script type="text/javascript" src="static/js/remind.js"></script>
+<script type="text/javascript" src="static/js/chat.js"></script>
+
+<script type="text/javascript" src="static/js/checkin.js"></script>
+
+
+</body>
+</html>
