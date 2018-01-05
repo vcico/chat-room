@@ -47,6 +47,7 @@ class User
     /**
      * 重连时恢复
      * @todo 未考虑到房间号
+     * @todo token有冗余数据
      */
     public static function restore($client_id,$token)
     {
@@ -80,9 +81,10 @@ class User
     /**
      * 客户端关闭连接后 (缓存登录状态 重连时需要)
      */
-    public static function afterClose($client_id)
+    public static function closeConnect($client_id)
     {
-        
+        $userSess = Gateway::getSession($client_id);
+        Gateway::sendToGroup(isset($userSess['room_id'])?$userSess['room_id']:self::DEFAULT_ROOM, Container::encodeMessage('close', $userSess));
     }
     
     /**

@@ -783,7 +783,10 @@ function fn_visitor(ws){
 function fn_add_user(data,o_viplist,parameter){
 	
 //	parameter--visitor | vip | manager
-	
+	if(typeof(data.user_id) == 'undefined')
+	{
+		return false;
+	}
 	var o_vip_li = document.createElement("li");	
 		o_vip_li.id=data.user_id;
 		o_viplist.appendChild(o_vip_li);
