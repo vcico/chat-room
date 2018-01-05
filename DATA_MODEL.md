@@ -114,6 +114,12 @@
 
 	[type=>'unonline',errorCode=>0,'info'=>'','data'=>['username'=>'',user_id=>,'room_id'=>]]
 	
+> 用户断开 通知同房间的所有用户
+    
+    *有两种情况: 用户已登录 和用户未登录  *
+
+        [type=>'close',errorCode=>0,'info'=>'','data'=>['username'=>'',user_id=>,'room_id'=>]]
+        [type=>'close',errorCode=>0,'info'=>'','data'=>['room_id'=>]]
 
 > 聊天消息 得到回复后才发送成功
 

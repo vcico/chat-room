@@ -83,8 +83,7 @@ class User
      */
     public static function closeConnect($client_id)
     {
-        $userSess = Gateway::getSession($client_id);
-        Gateway::sendToGroup(isset($userSess['room_id'])?$userSess['room_id']:self::DEFAULT_ROOM, Container::encodeMessage('close', $userSess));
+        Gateway::sendToGroup(isset($_SESSION['room_id'])?$_SESSION['room_id']:self::DEFAULT_ROOM, Container::encodeMessage('close', $_SESSION));
     }
     
     /**
