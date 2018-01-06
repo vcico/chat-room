@@ -42,11 +42,7 @@ class SendBehavior extends BaseBehavior
                     Gateway::sendToCurrentClient(Container::encodeMessage($message['type'], Container::$validator->errors,1,'数据验证失败'));
                     return false;
                 }
-		if($data['room_id']){
-                    $userSess = Gateway::getSession($client_id);
-                    $data['from'] = $userSess;
-                    Gateway::sendToGroup($userSess['room_id'], Container::encodeMessage($message['type'], $data));
-                }elseif($data['user_id']){
+		if($data['user_id']){
                     if(Gateway::isUidOnline($data['user_id'])){
                         $data['from'] = Gateway::getSession($client_id);
                         $string = Container::encodeMessage($message['type'], $data);
@@ -57,6 +53,10 @@ class SendBehavior extends BaseBehavior
 //                        ['type':'send','data':['room_id':'','user_id':1,'message':'xdfasfafsaf']]
 //                        ['type':'send','errCode':-2,'info':'对方已下线', 'data':['room_id':'','user_id':1,'message':'xdfasfafsaf','from']]
                     }
+                }elseif($data['room_id']){
+                    $userSess = Gateway::getSession($client_id);
+                    $data['from'] = $userSess;
+                    Gateway::sendToGroup($userSess['room_id'], Container::encodeMessage($message['type'], $data));
                 }
                 
 //		echo  '这是一条消息',"\n";
