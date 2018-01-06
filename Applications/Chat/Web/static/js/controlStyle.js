@@ -17,7 +17,11 @@ function fnInitail(){
 	
 	$("#vedioContent").css({"height":n_w_heihgt-325+"px"});
 	
-	$("#alert-remind").css({"left":(n_w_width-$("#alert-remind").width())/2+"px"},{"top":(n_w_heihgt-$("#alert-remind").height())/3+"px"})
+	$("#alert-remind").css({"left":(n_w_width-$("#alert-remind").width())/2+"px"},{"top":(n_w_heihgt-$("#alert-remind").height())/3+"px"});
+	
+//	$("#message-show").css({"min-height":n_w_heihgt-$("#statment").height()-$("#editMessage").height()-105+"px"})
+	
+
 }
 fnInitail();
 
@@ -128,3 +132,11 @@ function fn_private(e){
 	o_speakerB.innerHTML = this_name;
 	o_speakerB.title = this_id;
 }
+
+
+//onresize="onresize="fnInitail()"";
+
+//
+//$(window).resize(function(){
+//	fnInitail();
+//})

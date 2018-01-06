@@ -11,7 +11,7 @@
 
 
 var s_message_record = "";
-var mark
+var a_user = [];
 
 var o_user={
 	
@@ -113,6 +113,8 @@ window.onload=function(){
 
 	var ws = fn_new_scoket();
 	
+	o_user.set("room_id",1);
+	
 	var o_message_show = document.getElementById("message-show");
 	
 	
@@ -129,20 +131,20 @@ window.onload=function(){
 	
 	
 	
+	$("#mCSB_scrollTools").show();
+	
 	$('#login-btn').click(function(){
 		fn_login(ws);
-		layer.open({
-		  type: 1,
-		  skin: 'layui-layer-rim', //加上边框
-		  area: ['420px', '240px'], //宽高
-		  content: $('#login-box')
-		});
 	});
 	
 	$('#register-btn').click(function(){
 		fn_register(ws);
 	});
 	$('#send-btn').click(function(){
+		if(o_user.read("permit")==0){
+			fnRemind(oRemind.sNoSpeak);
+			return false;
+		}
 		console.log("用户--点击了发送消息按钮！");
 		fn_send_public(ws);
 	});
@@ -151,8 +153,12 @@ window.onload=function(){
 		var theEvent = e || window.event;
 		var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
 		if(code == 13 && $("#editText").html()!=null){
-			event.returnValue = false;
+		if(o_user.read("permit")==0){
+			fnRemind(oRemind.sNoSpeak);
+			return false;
+		}
 			fn_send_public(ws);
+			event.returnValue = false;
   			return false;
 		}
 	});
@@ -160,16 +166,38 @@ window.onload=function(){
 		var theEvent = e || window.event;
 		var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
 		if(code == 13 && $("#editText").html()!=null){
-			event.returnValue = false;
-			fn_send_private(ws);
+			if(o_user.read("permit")==0){
+				fnRemind(oRemind.sNoSpeak);
+				return false;
+			}
+			var o_speakerB = document.getElementById("speakerB");
+			if(o_speakerB.title == ""){
+			
+				//提示未选择私聊对象
+				
+				fnRemind(oRemind.s_private_nochocie);
+				
+			}else{
+				
+				fn_send_private(ws);
+				
+			}
+			theEvent.returnValue = false;
   			return false;
 		}
 	});
 	$("#private-button").click(function(){
 		var o_speakerB = document.getElementById("speakerB");
+		
+		if(o_user.read("permit")==0){
+			fnRemind(oRemind.sNoSpeak);
+			return false;
+		}
 		if(o_speakerB.title == ""){
 			
 			//提示未选择私聊对象
+			
+			fnRemind(oRemind.s_private_nochocie);
 			
 		}else{
 			
@@ -214,6 +242,9 @@ window.onload=function(){
 					fn_users_bk(o_result);
 					break;
 				case "unonline":
+					fn_unonline_bk(o_result);
+					break;
+				case "close":
 					fn_unonline_bk(o_result);
 					break;
 				case "restore":
@@ -305,8 +336,9 @@ function fn_restore_bk(evt){
 	o_user.set("user_name",evt.data.username);
 	
 	o_user.set("token",evt.data.token);
-//	$("#login").hide(); 
-//	$("#register").hide();
+	
+	$("#login").hide(); 
+	$("#register").hide();
 
 }
 
@@ -314,31 +346,45 @@ function fn_restore_bk(evt){
 function fn_online_bk(evt){
 	
 	console.log("服务器--发出新上线用户信息！");
+
+	var o_viplist = document.getElementById('vip-box');	
 	
-	var o_viplist = document.getElementById('vip-box');
-	
-//	evt.data.username
-//	
-//	evt.data.user_id
-//	
-//	evt.data.room_id
-	
-	//提示有新的加入了直播间
-	
+	console.log(evt);
+
 	fn_add_user(evt.data,o_viplist,"vip");
+
+	//刷新在线人数
+	var user_number = $("#vip-box li").length;
+	document.getElementById("vip-online").innerHTML="在线会员("+user_number+")";
+	
 	
 }
 
 //用户下线
 function fn_unonline_bk(evt){
 	
-	var o_user_list = document.getElementById("vip-box");
 	var o_user_id  = document.getElementById(evt.data.user_id);
-	o_user_list.removeChild(o_user_id);
+	console.log(evt);
+	if(typeof(evt.data.user_id) == "undefined" || typeof(o_user_id)=="undefined"){
+		 return false;
+	}
+	
+	var o_user_list = document.getElementById("vip-box");
+	o_user_list.removeChild(o_user_id);    
+	
+	for(x in a_user){
+		if(evt.data.user_id == a_user[x]){
+			a_user=a_user.slice(x+1);
+		}
+	}
+	
+	
+	var user_number = $("#vip-box li").length;
+	document.getElementById("vip-online").innerHTML="在线会员("+user_number+")";
+	
 	
 	
 }
-
 
 
 //接受心跳-回应
@@ -371,6 +417,8 @@ function fn_register_bk(evt){
 	
 	o_user.set("permit","1");  // ---允许发言
 	
+	$("#registerPage").hide();
+	
 }
 
 //返回登录信息
@@ -390,6 +438,12 @@ function fn_login_bk(evt){
 	$("#register").hide();   // ----隐藏登录注册按钮
 	
 	o_user.set("permit","1");  // ---允许发言
+	
+	var o_vip_list = document.getElementById("vip-online");
+ 	
+	fn_add_user(evt,o_vip_list,"vip");
+	
+	$("#registerPage").hide();
 	
 }
 
@@ -450,6 +504,8 @@ function fn_send_bk(o_message_show,evt){
 		o_message_word.innerHTML = evt.data.message;
 		
 		o_message_show.appendChild(o_message_li);
+		
+		
 		$('#message').scrollTop( $('#message-show')[0].scrollHeight);
 	}else{
 		
@@ -564,6 +620,7 @@ function fn_chat_private(ws){
 //3--获取用户列表
 function fn_users(ws){
 	
+	a_user = [];
 	console.log("客户端--请求用户列表");
 	var vip_box = document.getElementById("vip-box");
 	vip_box.innerHTML = "";
@@ -578,7 +635,7 @@ function fn_login(ws){
 	var name = $('#form-login input[name="username"]').val(),
 		password = $('#form-login input[name="password"]').val();
 		
-		if(name.length>2 && name.length<8){
+		if(name.length>1 && name.length<11){
 			
 			if(password.length>5 && password.length<17){
 				
@@ -591,17 +648,21 @@ function fn_login(ws){
 				var data = {"type":"login","data":{"username":name,"password":password}};
 				ws.send(JSON.stringify(data));
 				
+				
+				
 			}else{
 				
+				
+				fnRemind(oRemind.s_chekin);
 				//弹窗--密码错误
-				alert("用户名不合法!");
 	
 			}
 			
 		}else{
 			
+			
+			fnRemind(oRemind.s_chekin);
 			//弹窗--用户名输入错误
-			alert("用户名不合法!");
 			
 		}
 }
@@ -613,7 +674,7 @@ function fn_register(ws){
 		password =	$('#form-register input[name="password"]').val(),
 		repeat_pswd =  $('#form-register input[name="repeat-password"]').val();
 	
-	if(name.length>2 && name.length<8){	//判断用户名长度合法性
+	if(name.length>1 && name.length<11){	//判断用户名长度合法性
 		
 		if(password.length>5 && password.length<17){ //判断密码合法性
 
@@ -630,13 +691,14 @@ function fn_register(ws){
 				
 			}else{
 				
-				//提示两次输入的密码不一样
+				fnRemind(oRemind.s_register_same);
 				console.log("客户端--注册密码不相同！");
 				
 			}
 			
 		}else{
 			
+			fnRemind(oRemind.s_register_password);
 			//弹窗--密码长度不合法
 			console.log("客户端--注册密码长度不合法！");
 		}
@@ -644,6 +706,7 @@ function fn_register(ws){
 		
 	}else{
 		
+		fnRemind(oRemind.s_register_username);
 		//弹窗--用户名输入不合法
 		alert("客户端--注册用户名输入不合法！");
 		
@@ -666,6 +729,9 @@ function fn_send_public(ws){
 			
 			console.log("不能发送重复或为空的消息。");
 			
+			fnRemind(oRemind.s_FNR);
+			
+			
 		}else{
 			
 			s_message_record = msg;
@@ -680,6 +746,9 @@ function fn_send_public(ws){
 		
 	}else{
 		console.log("需要登录才能发送消息哦？");
+		
+		fnRemind(oRemind.sNoSpeak);
+		
 	}
 	
 }
@@ -698,6 +767,8 @@ function fn_send_private(ws){
 			
 			console.log("不能发送重复或为空的消息。");
 			
+			fnRemind(oRemind.s_FNR);
+			
 		}else{
 			
 			s_message_record = msg;
@@ -714,6 +785,8 @@ function fn_send_private(ws){
 		}
 		
 	}else{
+		
+		fnRemind(oRemind.sNoSpeak);
 		console.log("需要登录才能发送消息哦？");
 	}
 	
@@ -770,6 +843,52 @@ function fn_visitor(ws){
 
 
 
+//8--添加用户
+function fn_refresh_user(data,o_viplist,parameter){
+	
+//	parameter--visitor | vip | manager
+	if(typeof(data.username)=="undefined"){
+		return false;
+	}
+
+	var count = 0;
+	
+	for(x in a_user){
+		if(a_user[x]==data.user_id){
+			count++;
+		}
+	}
+	
+	if(count==0){
+		
+		var o_vip_li = document.createElement("li");	
+			o_vip_li.id=data.user_id;
+			o_viplist.appendChild(o_vip_li);
+			
+			a_user.unshift(data.user_id);
+			
+			var img_head = document.createElement('img');
+			img_head.className="usr_avatar";
+			img_head.src = "public/images/person/null.jpg";
+			o_vip_li.appendChild(img_head);
+			
+			var user_name = document.createElement('span');
+			user_name.innerHTML = data.username;
+			user_name.onclick=function(e){
+				fn_private(e);
+			};
+			user_name.className = "usr_name whiteColor";
+			o_vip_li.appendChild(user_name);
+			
+			var img_mark = document.createElement('img');
+			img_mark.className = "usr_vest";
+			img_mark.src= "public/images/person/"+parameter+".png";
+			o_vip_li.appendChild(img_mark);
+	}
+
+		
+		
+}
 
 
 
@@ -783,31 +902,47 @@ function fn_visitor(ws){
 function fn_add_user(data,o_viplist,parameter){
 	
 //	parameter--visitor | vip | manager
-	if(typeof(data.user_id) == 'undefined')
-	{
+	if(typeof(data.username)=="undefined"){
 		return false;
 	}
-	var o_vip_li = document.createElement("li");	
-		o_vip_li.id=data.user_id;
-		o_viplist.appendChild(o_vip_li);
 
-		var img_head = document.createElement('img');
-		img_head.className="usr_avatar";
-		img_head.src = "public/images/person/null.jpg";
-		o_vip_li.appendChild(img_head);
+	var count = 0;
+	
+	for(x in a_user){
+		if(a_user[x]==data.user_id){
+			count++;
+		}
+	}
+	
+	if(count==0){
 		
-		var user_name = document.createElement('span');
-		user_name.innerHTML = data.username;
-		user_name.onclick=function(e){
-			fn_private(e);
-		};
-		user_name.className = "usr_name whiteColor";
-		o_vip_li.appendChild(user_name);
+		var o_vip_li = document.createElement("li");	
+			o_vip_li.id=data.user_id;
+			o_viplist.appendChild(o_vip_li);
+			
+			a_user.unshift(data.user_id);
+			
+			var img_head = document.createElement('img');
+			img_head.className="usr_avatar";
+			img_head.src = "public/images/person/null.jpg";
+			o_vip_li.appendChild(img_head);
+			
+			var user_name = document.createElement('span');
+			user_name.innerHTML = data.username;
+			user_name.onclick=function(e){
+				fn_private(e);
+			};
+			user_name.className = "usr_name whiteColor";
+			o_vip_li.appendChild(user_name);
+			
+			var img_mark = document.createElement('img');
+			img_mark.className = "usr_vest";
+			img_mark.src= "public/images/person/"+parameter+".png";
+			o_vip_li.appendChild(img_mark);
+	}
+
 		
-		var img_mark = document.createElement('img');
-		img_mark.className = "usr_vest";
-		img_mark.src= "public/images/person/"+parameter+".png";
-		o_vip_li.appendChild(img_mark);
+		
 }
 
 //9--私聊

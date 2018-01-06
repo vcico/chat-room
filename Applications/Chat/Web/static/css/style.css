@@ -29,6 +29,7 @@ h1>img{
 	text-align: center;
 	line-height: 30px;
 	color: white;
+	cursor: pointer;
 }
 .accountList li>a{
 	display: block;
@@ -115,10 +116,28 @@ h1>img{
 #vip-container{
 	width:100%;
 	height:700px;
+	overflow-y: auto;
 }
+
+#vip-container::-webkit-scrollbar{
+	width:4px;
+	height:4px;
+}
+#vip-container::-webkit-scrollbar-track{
+	background:#E6E6E6;
+	border-radius:2px;
+}
+#vip-container::-webkit-scrollbar-thumb{
+	background:#747474;
+	border-radius:2px;
+}
+#vip-container::-webkit-scrollbar-corner{
+	background:#E6E6E6;
+}
+
+
 #vip-container #vip-box{
 	width:100%;
-	height:700px;
 	overflow-y:auto;
 	display: block;
 }
@@ -129,6 +148,7 @@ h1>img{
 	padding-left:2%;
 	padding-right:2%;
 	border-bottom:1px solid rgba(0,0,0,.2);
+	cursor: pointer;
 }
 #vip-box>li:hover{
 	/*background-color: rgba(0,0,0,.2);*/
@@ -271,7 +291,7 @@ h1>img{
 	overflow-y: auto;
 	position: relative;
 }
-#message::-webkit-scrollbar{
+/*#message::-webkit-scrollbar{
 	width:4px;
 	height:4px;
 }
@@ -286,7 +306,21 @@ h1>img{
 #message::-webkit-scrollbar-corner{
 	background:#E6E6E6;
 }
-
+#message::scrollbar{
+	width:4px;
+	height:4px;
+}
+#message::scrollbar-track{
+	background:#E6E6E6;
+	border-radius:2px;
+}
+#message::scrollbar-thumb{
+	background:#747474;
+	border-radius:2px;
+}
+#message::scrollbar-corner{
+	background:#E6E6E6;
+}*/
 
 
 #message-private{
@@ -317,7 +351,7 @@ h1>img{
 	overflow-y: auto;
 	overflow-x: hidden;
 }
-.private-talk::-webkit-scrollbar{
+/*.private-talk::-webkit-scrollbar{
 	width:4px;
 	height:4px;
 }
@@ -331,7 +365,7 @@ h1>img{
 }
 .private-talk::-webkit-scrollbar-corner{
 	background:#E6E6E6;
-}
+}*/
 .private-talk>ul{
 	width:100%;
 	overflow: hidden;
@@ -350,6 +384,7 @@ h1>img{
 	right:5px;
 	border-radius: 3px;
 	z-index: 10000000000000;
+	cursor: pointer;
 }
 .private-session{
 	width:60%;
@@ -416,18 +451,20 @@ h1>img{
 
 
 
-#message>#message-show{
+#message-show{
 	width:50%;	
 	margin-left:5px;
-	overflow: hidden;
+	/*position: relative;
+	top:-20px;*/
+	left:0px;
 }
-#message>#message-show>li{
-	width:100%;
+#message-show>li{
+	max-width:50%;
 	margin-top:5px;
 	margin-bottom: 15px;
 	overflow: hidden;
 }
-#message #message-show li>.usrPic{
+#message-show li>.usrPic{
 	width:40px;
 	float: left;
 }
@@ -523,6 +560,7 @@ h1>img{
 	background-color:#2196F3;
 	border-radius: 2px;
 	color: brown;
+	cursor: pointer;
 }
 .room-group{
 	height:25px;
@@ -540,6 +578,7 @@ h1>img{
 	background-color: #2196F3;
 	color: khaki;
 	margin-left:10px;
+	cursor: pointer;
 }
 .btn-toolbar{
 	float: left;
@@ -637,6 +676,7 @@ h1>img{
 	float: left;
 	text-align: center;
 	line-height: 24px;
+	cursor: pointer;
 }
 .style-top{
 	margin-top:20px;
