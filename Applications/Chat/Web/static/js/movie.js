@@ -5,10 +5,12 @@
 
 //播放小电影
 function fn_play(src){
+	
+	
 	$("#movie-wrap").show();
 	var my_video = document.getElementById("movie-content");
 
-	my_video.src ="http://dev.sex.com/"+src;
+	my_video.src =src;
 	my_video.load();
 	my_video.play();
 }
@@ -22,11 +24,11 @@ $("#movie-close").click(function(){
 
 //回掉生成电影列表
 function callback(result){
-	
+	console.log(result);
 var data = result.data;
 var moviebar = document.getElementById('movie');
 
-if(typeof(data)!="undefined"){
+if(typeof(data)!="undefined" && o_user.read("level")=="admin"){
 	
 	console.log("数据正常！");
 	
@@ -40,8 +42,9 @@ if(typeof(data)!="undefined"){
 		movie_li.onclick=function(e){
 			
 				var src = this.title;
+				var content = this.innerHTML;
 				var editMessage = document.getElementById("editText");
-				editMessage.innerHTML = '<li class="movie-word" title="'+src+'" onclick="fn_play(this.title);">亲爱的用户朋友，最新的影片已经发布，还等什么，点击这里让我们一观岛国巨作吧!</li>';
+				editMessage.innerHTML = '<li class="movie-word" title="'+src+'" onclick="fn_play(this.title);">【片名】:'+content+'<br />亲爱的用户朋友，最新的影片已经发布，还等什么，点击这里让我们一观岛国巨作吧!</li>';
 				
 		}
 		

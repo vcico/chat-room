@@ -1007,7 +1007,7 @@ div[ng-view]{
  ----------------------------------*/
 
 
-
+#movies{display: none;}
 #movie-wrap{position: absolute;top: 0px;left: 0px;z-index: 1000000000000000;display: none; width: 740px;  margin-left: auto; margin-right: auto; margin-top: 100px; }
 #movie-close{
 	width:30px;

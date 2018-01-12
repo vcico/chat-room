@@ -416,7 +416,7 @@
 						<button id="emoticon-pack" type="button" class="btn dropdown-toggle" data-toggle="dropdown"> 
 						</button>
 						<div id="img-emotion" class="dropdown-menu" role="menu">
-							<img onclick="javascript:fn_add_emoji(this.src);return false;" ng-repeat="x in pics" src="{{s_way}}{{x}}{{s_behead}}" title="给力" />
+							<img onclick="javascript:fn_add_emoji(this.src);return false;" ng-repeat="x in pics" src="{{s_way + x + s_behead}}" title="给力" />
 						</div>
 					</div>
 					<!--<div class="btn-group dropup">
@@ -449,8 +449,8 @@
 		<div id="win" class="tsnBk radiusBorder">
 			<div id="winLanmu">
 				<a href="#/reward" class="redBk"><span class="glyphicon glyphicon-play-circle"></span>开奖直播</a>
-				<a href="#/vedio"><span class="glyphicon glyphicon-facetime-video"></span>美女视频</a>
-				<a href="#/movie"><span class="glyphicon glyphicon-facetime-video"></span>电影列表</a>
+				<a href="#/video"><span class="glyphicon glyphicon-facetime-video"></span>美女视频</a>
+				<a id="movies" href="#/movie"><span class="glyphicon glyphicon-facetime-video"></span>电影列表</a>
 			</div>
 			<div id="vedioContent" class="tsnBk">
 				<div ng-view></div>
@@ -538,7 +538,7 @@
 			<form id="form-register" class="bs-example bs-example-form" role="form">
 				<div class="input-group">
 					<span class="input-group-addon"><label class="glyphicon glyphicon-user" for="username"></label></span>
-					<input id="username" type="text" name="username" class="form-control" placeholder="请输入用户名,长度为3-7个字符" value="" />
+					<input id="username" type="text" name="username" class="form-control" placeholder="请输入用户名,长度为2-8个字符" value="" />
 				</div>
 				<br />
 				<div class="input-group">
@@ -617,7 +617,7 @@
 
 <script type="text/javascript" src="static/js/checkin.js"></script>
 
-<script type="text/javascript" src="../static/js/movie.js"></script>
+<script type="text/javascript" src="/static/js/movie.js"></script>
 
 <script type="text/javascript" src="static/js/scroll_private.js"></script>
 

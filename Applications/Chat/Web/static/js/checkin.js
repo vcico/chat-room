@@ -18,22 +18,6 @@ function fn_add_emoji(s_src){
 }
 
 
-//开奖视频src路径调用  数据和方法
-var oVideoLink = {
-	bj:"https://www.1229.org/video/pk10/450.html",
-	cq:"https://www.1229.org/mvideo/cqssc",
-	js:"https://www.1229.org/mvideo/jsk3",
-	fnTabVideo:function(sId,sSrc){
-		var iframeWin = document.getElementById("iframeWin");
-		iframeWin.src=sSrc;
-		var objs = document.getElementById(sId);
-		$(objs).addClass("orangeBk").siblings().removeClass("orangeBk");
-	}
-}
-	
-
-
-
 var s_message_record = "";
 var a_user = [];
 
@@ -145,7 +129,10 @@ function fn_restore_bk(evt){
 	o_user.set("user_name",evt.data.username);
 	
 	o_user.set("token",evt.data.token);
-	
+	if(evt.data.level=="admin"){
+		o_user.set("level","admin");
+		$("#movies").show();
+	}
 	$("#login").hide(); 
 	$("#register").hide();
 	$("#logout").show();
@@ -174,19 +161,29 @@ function fn_online_bk(evt){
 //用户下线
 function fn_unonline_bk(evt){
 	
-	var o_user_id  = document.getElementById(evt.data.user_id);
 	console.log(evt);
-	if(typeof(evt.data.user_id) == "undefined" || typeof(o_user_id)=="undefined"){
-		 return false;
-	}
+	console.log("下线用户提醒");
+	console.log(evt.data.user_id);
+//	
+//	if(typeof(evt.data.user_id) == "undefined"){
+//		 return false;
+//	}
+	var o_user_id  = document.getElementById(evt.data.user_id);
+//	if(typeof(o_user_id)!="undefined"){
+//		 return false;
+//	}
 	
-	var o_user_list = document.getElementById("vip-box");
-	o_user_list.removeChild(o_user_id);    
-	
-	for(x in a_user){
-		if(evt.data.user_id == a_user[x]){
-			a_user=a_user.slice(x+1);
+	if(typeof(evt.data.user_id) == "undefined" && typeof(o_user_id)!="undefined"){
+		
+		var o_user_list = document.getElementById("vip-box");
+		o_user_list.removeChild(o_user_id);    
+		
+		for(x in a_user){
+			if(evt.data.user_id == a_user[x]){
+				a_user=a_user.slice(x+1);
+			}
 		}
+		
 	}
 	
 	
@@ -220,7 +217,10 @@ function fn_register_bk(evt){
 	o_user.set("token",evt.data.token);
 	
 	console.log("你注册并登录了账号:"+"user_id:"+o_user.read("user_id")+"user_name:"+o_user.read("user_name")+"token:"+o_user.read("token"));
-	
+	if(evt.data.level=="admin"){
+		o_user.set("level","admin");
+		$("#movies").show();
+	}
 	$("#login").hide(); 
 	$("#register").hide(); // ----隐藏登录注册按钮
 	$("#logout").show();
@@ -235,6 +235,7 @@ function fn_register_bk(evt){
 function fn_login_bk(evt){
 	
 	console.log("服务器--返回了登录信息！");
+	console.log(evt);
 	
 	o_user.set("user_id",evt.data.user_id);
 	
@@ -250,6 +251,10 @@ function fn_login_bk(evt){
 	$("#logout").show();
 	$("#my_account").show().html(o_user.read("user_name"));
 	// ----隐藏登录注册按钮
+	if(evt.data.level=="admin"){
+		o_user.set("level","admin");
+		$("#movies").show();
+	}
 	
 	o_user.set("permit","1");  // ---允许发言
 	
@@ -464,11 +469,6 @@ function fn_send_bk(o_message_show,evt){
 /*--------------------------
  *  主动行为 
  ----------------------------*/
-//1--切换房间
-
-function fn_chat_private(ws){
-	
-}
 
 //2--token恢复登录
 //function fn_restore_bk(ws){
@@ -513,7 +513,7 @@ function fn_login(ws){
 	var name = $('#form-login input[name="username"]').val(),
 		password = $('#form-login input[name="password"]').val();
 		
-		if(name.length>1 && name.length<11){
+		if(name.length>1 && name.length<9){
 			
 			if(password.length>5 && password.length<17){
 				
@@ -522,9 +522,11 @@ function fn_login(ws){
 				//存储到localstorage
 				o_user.set("user_name",name);
 				o_user.set("password",password);
-				
+				console.log("name:"+name+"    password:"+password);
 				var data = {"type":"login","data":{"username":name,"password":password}};
-				ws.send(JSON.stringify(data));	
+				ws.send(JSON.stringify(data));
+				console.log(data);
+				console.log(ws);
 				
 			}else{
 				
@@ -546,7 +548,7 @@ function fn_register(ws){
 		password =	$('#form-register input[name="password"]').val(),
 		repeat_pswd =  $('#form-register input[name="repeat-password"]').val();
 	
-	if(name.length>1 && name.length<11){	//判断用户名长度合法性
+	if(name.length>1 && name.length<9){	//判断用户名长度合法性
 		
 		if(password.length>5 && password.length<17){ //判断密码合法性
 
@@ -603,7 +605,6 @@ function fn_send_public(ws){
 			console.log("不能发送重复或为空的消息。");
 			
 			fnRemind(oRemind.s_FNR);
-			
 			
 		}else{
 			
@@ -761,9 +762,6 @@ function fn_refresh_user(data,o_viplist,parameter){
 		
 }
 
-//function 
-
-
 /*-------------------------
  * Functions
  ------------------------*/
@@ -827,26 +825,14 @@ function fn_add_user(data,o_viplist,parameter){
 
 
 
-
+var ws;
 function fn_innitail(){
-	o_user.set("permit","0");
-
-	var ws = fn_new_scoket();
+	ws = fn_new_scoket();
 	
 	o_user.set("room_id",1);
-	
+	$("#movies").hide();
+	localStorage.removeItem("level");
 	var o_message_show = document.getElementById("message-show");
-	
-	
-	function fn_send_movie(ws){
-	
-		var movie_diliver = document.getElementsByClassName("movie-diliver");
-		
-		
-		
-	}
-	
-	
 	
 	ws.onopen = function(evt) {
 		
@@ -858,6 +844,10 @@ function fn_innitail(){
 			
 	};
 	
+	ws.onerror=function(evt){
+		console.log(evt.data);
+		ws.close();
+	}
 	
 	$('#login-btn').click(function(){
 		fn_login(ws);
@@ -959,9 +949,12 @@ function fn_innitail(){
 		localStorage.removeItem("user_id");
 		localStorage.removeItem("user_name");
 		localStorage.removeItem("visitor");
+		localStorage.removeItem("level");
 		
-		ws.close();
+		var data = {"type":"logout","data":{}};
+		ws.send(JSON.stringify(data));
 		
+		$("#movies").hide();
 		$("#logout").hide();
 		$("#my_account").hide().html("");
 		$("#register").show();
@@ -1023,6 +1016,11 @@ function fn_innitail(){
 					console.log("restore出现错误："+o_result.info);
 					fn_restore_err(ws);
 					break;
+				case "login":
+					console.log("login出现错误：");
+					console.log(o_result);
+					fn_restore_err(ws);
+					break;
 				case "ping":
 					console.log("ping出现错误："+o_result.onfo);
 					break;
@@ -1042,7 +1040,7 @@ function fn_innitail(){
 			
 	        fn_innitail();
 	         
-	    },5000);
+	    },30000);
 		
 	};
 }
