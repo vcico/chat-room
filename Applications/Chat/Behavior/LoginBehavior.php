@@ -38,14 +38,14 @@ class LoginBehavior extends BaseBehavior
 		$data = $message['data'];
 		if(User::isLogin())  // 如果已登录  返回用户信息并返回(终止程序)
 		{
-                    Gateway::sendToCurrentClient(Container::encodeMessage($message['type'],['username'=>$this->userinfo['username'],'user_id'=>$this->userinfo['userid']]));
+                    Gateway::sendToCurrentClient(Container::encodeMessage($message['type'],['username'=>$this->userinfo['username'],'user_id'=>$this->userinfo['userid'],'level'=>User::getUserLevel($this->userinfo['username'])]));
                     return true;
 		}
 		if(!Container::$validator->validate($this->rules(),$data)) {
                     $msg = Container::encodeMessage($message['type'],Container::$validator->errors,1,'参数错误！');
 		}else{
                     $token = User::login($client_id, $this->userinfo);  // 登录操作
-                    $msg = Container::encodeMessage($message['type'],['username'=>$this->userinfo['username'],'user_id'=>$this->userinfo['userid'],'token'=>$token]);
+                    $msg = Container::encodeMessage($message['type'],['username'=>$this->userinfo['username'],'user_id'=>$this->userinfo['userid'],'token'=>$token,'level'=>User::getUserLevel($this->userinfo['username'])]);
 		}
 		Gateway::sendToCurrentClient($msg);
 	}

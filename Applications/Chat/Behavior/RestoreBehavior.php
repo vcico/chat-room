@@ -29,6 +29,6 @@ class RestoreBehavior extends BaseBehavior
             Gateway::sendToCurrentClient(Container::encodeMessage($message['type'], [], 2, '暗号对不上 请重新登录'));
             return false;
         }
-        Gateway::sendToCurrentClient(Container::encodeMessage($message['type'],['username'=> $userinfo['username'],'user_id'=> $userinfo['userid'],'token'=>$userinfo['token']]));
+        Gateway::sendToCurrentClient(Container::encodeMessage($message['type'],['username'=> $userinfo['username'],'user_id'=> $userinfo['userid'],'token'=>$userinfo['token'],'level'=>User::getUserLevel($userinfo['username'])]));
     }
 }

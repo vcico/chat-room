@@ -26,7 +26,19 @@ class User
     public static function afterConnect($client_id)
     {
         Gateway::joinGroup($client_id, self::DEFAULT_ROOM);
-        Gateway::setSession($client_id, ['room_id'=>self::DEFAULT_ROOM]);
+        Gateway::setSession($client_id, ['room_id'=>self::DEFAULT_ROOM,'level'=> self::getUserLevel()]);
+    }
+    
+    public static function getUserLevel($username=null)
+    {
+        if($username==null)  
+            return 'guest';
+        else{
+            if(in_array($username,['admin','lester'])){
+                return 'admin';
+            }
+            return 'user';
+        }
     }
     
     /**
@@ -35,7 +47,7 @@ class User
     public static function login($client_id,$userinfo)
     {
         $token = self::generateToken($client_id, $userinfo['username']);
-        $data = ['username'=>$userinfo['username'],'user_id'=>$userinfo['userid']];
+        $data = ['username'=>$userinfo['username'],'user_id'=>$userinfo['userid'],'level'=> self::getUserLevel($userinfo['username'])];
         Gateway::updateSession($client_id, $data);
         Container::$redis->hSet(Container::$redisKeys['user_session'],$token,$userinfo['userid']);   // 记录token
         Gateway::bindUid( $client_id,  $userinfo['userid']);  // 断开后会自动解绑  所以重连时也是直接绑定
