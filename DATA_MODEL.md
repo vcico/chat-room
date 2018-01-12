@@ -136,3 +136,36 @@
 
 
 	
+## 获取视频列表
+	
+> 参数、 图片、分页等以后确定
+
+GET http://192.168.40.158:55151/video.php
+
+	{
+		"errCode": "0",
+		"info": "",
+		"data": [{
+			视频ID "id": "4620",
+			视频名称 "name": "Googirl",
+			无用 "video": "http:\/\/video-hw.xvideos-cdn.com\/videos\/3gp\/a\/4\/a\/xvideos.com_a4af9cf361f79d5ce9c8e6e0950ce29a-1.mp4?e=1513442468&ri=1024&rs=85&h=7f6efd51a6d99cbb9348ba83ce0992b9",
+			视频时长 "duration": "13 min",
+			文件地址 "file": "http:\/\/dev.sex.com\/download\/2017-12-16\/bedc83f5b686a13ba8ec0f45dda1c068.mp4",
+			视频分类 "cate": "1"
+		}, 
+	
+		......
+	
+		{
+			"id": "4611",
+			"name": "Keito Miyazawa sucks dong and gets cum in sex",
+			"video": "http:\/\/video-hw.xvideos-cdn.com\/videos\/3gp\/1\/b\/c\/xvideos.com_1bc031acc1abdc2e128f9fb17fa223f7-1.mp4?e=1513441584&ri=1024&rs=85&h=e9d9082bbf0fdce68cc5005a8678921e",
+			"duration": "10 min",
+			"file": "download\/2017-12-16\/a3cbe78a8eed6be92274b45cd21406a2.mp4",
+			"cate": "1"
+		}]
+	}
+
+	请求失败时
+	['errCode'=>'1','info'=>'数据请求失败','data'=>$e->getMessage()]
+	

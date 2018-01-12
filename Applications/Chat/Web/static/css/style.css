@@ -17,16 +17,17 @@ h1>img{
 }
 
 .accountList{
-	width:270px;
+	width:420px;
 	height:60px;
 	float: right;
 }
 .accountList li{
 	float: right;
-	width: 90px;
+	width: 120px;
 	margin-top:15px;
 	height:30px;
-	text-align: center;
+	text-align: left;
+	text-indent: 2em;
 	line-height: 30px;
 	color: white;
 	cursor: pointer;
@@ -43,6 +44,10 @@ h1>img{
 	background: url(../../public/images/icon/account-icon.png) 0px -25px  no-repeat;
 }
 #logout{
+	display: none;
+}
+#my_account{
+	display: none;
 	background: url(../../public/images/icon/account-icon.png) 0px 5px  no-repeat;
 }
 /*--------------------------------
@@ -116,7 +121,8 @@ h1>img{
 #vip-container{
 	width:100%;
 	height:700px;
-	overflow-y: auto;
+	position: relative;
+	overflow: hidden;
 }
 
 #vip-container::-webkit-scrollbar{
@@ -136,10 +142,19 @@ h1>img{
 }
 
 
-#vip-container #vip-box{
+#vip-list{
+	width: 100%;
+	height:100%;
+	position: relative;
+}
+#vip-box{
 	width:100%;
+	min-height:100%;
 	overflow-y:auto;
 	display: block;
+	position: relative;
+	top:0px;
+	left: 0px;
 }
 #vip-box>li{
 	width:96%;
@@ -176,6 +191,7 @@ h1>img{
 	margin-top:5px;
 	float: right;
 }
+
 
 
 #private-chat{
@@ -288,40 +304,9 @@ h1>img{
 #message{
 	width:100%;
 	height:600px;
-	overflow-y: auto;
+	overflow: hidden;
 	position: relative;
 }
-/*#message::-webkit-scrollbar{
-	width:4px;
-	height:4px;
-}
-#message::-webkit-scrollbar-track{
-	background:#E6E6E6;
-	border-radius:2px;
-}
-#message::-webkit-scrollbar-thumb{
-	background:#747474;
-	border-radius:2px;
-}
-#message::-webkit-scrollbar-corner{
-	background:#E6E6E6;
-}
-#message::scrollbar{
-	width:4px;
-	height:4px;
-}
-#message::scrollbar-track{
-	background:#E6E6E6;
-	border-radius:2px;
-}
-#message::scrollbar-thumb{
-	background:#747474;
-	border-radius:2px;
-}
-#message::scrollbar-corner{
-	background:#E6E6E6;
-}*/
-
 
 #message-private{
 	position: absolute;
@@ -330,9 +315,10 @@ h1>img{
 	width:35%;
 	float: right;
 	width:280px;
-	/*border:1px solid #FF6600;*/
 	padding:0px 2px 20px;
 	z-index: 1;
+	display: none;
+	background-color: #333;
 }
 #message-private>p{
 	width:100%;
@@ -345,31 +331,41 @@ h1>img{
 	line-height: 30px;
 	border-radius: 1px;
 }
-.private-talk{
+#private-talk{
 	width:100%;
 	height: 200px;
-	overflow-y: auto;
-	overflow-x: hidden;
-}
-/*.private-talk::-webkit-scrollbar{
-	width:4px;
-	height:4px;
-}
-.private-talk::-webkit-scrollbar-track{
-	background:#E6E6E6;
-	border-radius:2px;
-}
-.private-talk::-webkit-scrollbar-thumb{
-	background:#F60;
-	border-radius:2px;
-}
-.private-talk::-webkit-scrollbar-corner{
-	background:#E6E6E6;
-}*/
-.private-talk>ul{
-	width:100%;
+	position: relative;
 	overflow: hidden;
 }
+
+
+#private-talk>ul{
+	width:270px;
+	min-height:100%;
+	overflow-x: hidden;
+	position: relative;
+	top:0px;
+	left:0px;
+}
+
+.scroll-wrap{
+	width: 6px;
+	position: absolute;
+	top:0px;
+	right:0px;
+	height:100%;
+	box-shadow: 1px 1px 1px rgba(255,255,255,0.1);
+	background-color:rgba(0,0,0,0.4);
+}
+.scroll-line{
+	position: absolute;
+	top:0px;
+	left:1px;
+	width:4px;
+	height:100%;
+	background-color: rgba(255,255,255,0.6);
+}
+
 
 #private-mark{
 	width:60px;
@@ -394,7 +390,7 @@ h1>img{
 }
 .private-session>p{
 	line-height: 25px;
-	color: khaki;
+	color: white;
 	word-break: break-all;
 	overflow: hidden;
 }
@@ -406,8 +402,8 @@ h1>img{
 }
 .private-content{
 	width:auto !important;
-	color: white !important;
-	/*background-color: rgba(255,255,255,.3);*/
+	color:white !important;
+	background-color: rgba(255,255,255,.3);
 	border-radius: 2px;
 	/*padding-left: 5px !important;*/
 	padding:0px 5px !important;}
@@ -452,21 +448,22 @@ h1>img{
 
 
 #message-show{
-	width:50%;	
+	width:100%;	
 	margin-left:5px;
-	/*position: relative;
-	top:-20px;*/
+	position: relative;
+	top:0px;
 	left:0px;
 }
 #message-show>li{
-	max-width:50%;
+	max-width:100%;
 	margin-top:5px;
-	margin-bottom: 15px;
+	margin-bottom: 20px;
 	overflow: hidden;
 }
 #message-show li>.usrPic{
 	width:40px;
 	float: left;
+	position: absolute;
 }
 .usrPic>.avatar{
 	width:40px;
@@ -479,9 +476,11 @@ h1>img{
 	margin-top:3px;
 }
 .usrContent{
-	width:100%;
-	float: right;
-	margin-right:-50px;
+	/*width:100%;*/
+	float: left;
+	margin-left:55px;
+	/*margin-right:50px;
+	position: relative;*/
 }
 .usrContent>p{
 	height:20px;
@@ -504,12 +503,36 @@ h1>img{
 }
 .usrContent>.usrWords{
 	background: linear-gradient(to right, rgb(244, 67, 54), rgb(249, 118, 25)) !important;
-	padding:3px;
-	/*max-width: 60%;*/
+	padding:6px 12px 6px;
 	position: relative;
 	margin-right:50px;
 	border-radius: 5px;
 }
+.usrWordx{
+    background: #AB47BC!important;
+    background: -webkit-linear-gradient(left,#AB47BC,#5169DE)!important;
+    background: -moz-linear-gradient(left,#AB47BC,#5169DE)!important;
+    background: -ms-linear-gradient(left,#AB47BC,#5169DE)!important;
+    background: -o-linear-gradient(left,#AB47BC,#5169DE)!important;
+    background: linear-gradient(to right,#AB47BC,#5169DE)!important;
+    padding:6px 12px 6px;
+	position: relative;
+	margin-right:50px;
+	border-radius: 5px;
+}
+.usrWordx:before{
+	content: "";
+    height: 0;
+    width: 0;
+    position: absolute;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #AB47BC;
+    top:0px;
+    left:-6px;
+}
+
+
 .usrContent>.usrWords:before{
 	content: "";
     height: 0;
@@ -520,6 +543,35 @@ h1>img{
     border-top: 8px solid rgb(244, 67, 54);
     top:0px;
     left:-6px;
+}
+.movie-word{
+	width:100%;
+	/*height:30px !important;*/
+	line-height: 30px;
+	color:white !important;
+	font-size: 18px !important;
+}
+
+#message-scroll{
+	width: 16px;
+	height:100%;
+	position: absolute;
+	top:0px;
+	right:0px;
+}
+#message-line{
+	width: 6px;
+	margin: 0 auto;
+	height:100%;
+	box-shadow: 1px 1px 1px rgba(255,255,255,0.1);
+	background-color:rgba(0,0,0,0.4);
+}
+#message-roll{
+	position: absolute;
+	top:2px;
+	left:6px;
+	width:4px;
+	background-color: rgba(255,255,255,0.4);
 }
 
 
@@ -953,3 +1005,16 @@ div[ng-view]{
 /*--------------------------------
  * ALERT OVER
  ----------------------------------*/
+
+
+
+#movie-wrap{position: absolute;top: 0px;left: 0px;z-index: 1000000000000000;display: none; width: 740px;  margin-left: auto; margin-right: auto; margin-top: 100px; }
+#movie-close{
+	width:30px;
+	height:30px;
+	/*background-color: #000000;*/
+	background: url(../../public/images/icon/close-icon.png)  no-repeat;
+	position: absolute;
+	top:0px;
+	right: 0px;
+}

@@ -37,13 +37,13 @@ function fnRemind(type){
 	remind.style.display="block";
 	
 }
-function fn_register_remind(type){
-	
-	
-}
 
-setInterval(function(){
-	fnRemind(oRemind.sRegister);
+var timex1 = setInterval(function(){
+	if(o_user.read("permit")=="1"){
+		clearInterval(timex1);
+	}else{
+		fnRemind(oRemind.sRegister);
+	}
 },300000);
 
 

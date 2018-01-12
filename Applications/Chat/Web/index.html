@@ -9,19 +9,12 @@
 <link rel="stylesheet" href="/static/css/init.css" />
 <link rel="stylesheet" href="/static/css/style.css" />
 
-
-<link rel="stylesheet" href="static/css/scorll.css" />
-
-
 <script type="text/javascript" src="static/js/jquery-3.1.0.min.js" ></script>
 <script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
 <script src="https://apps.bdimg.com/libs/angular-route/1.3.13/angular-route.js"></script>
 <script type="text/javascript" src="static/js/bootstrap.min.js" ></script>
 <script type="text/javascript" src="static/js/newRoute.js" ></script>
 
-
-
-<!--〈link rel="shortcuticon" href="http://…/icon.ico"〉-->
 <link rel="Shortcut Icon" href="favicon.ico">
 </head>
 <body onresize="fnInitail()">
@@ -38,7 +31,8 @@
 	<ul class="accountList">
 		<li id="login">登录</li>
 		<li id="register">注册</li>
-		<!--<li id="logout">注销</li>-->
+		<li id="logout">注销</li>
+		<li id="my_account"></li>
 	</ul>
 	<!--登录注册结束-->
 	
@@ -71,28 +65,19 @@
 		<div id="vip-container" class="tsnFourBk">
 
 			<!--会员列表-->
-			<ul id="vip-box">
-				<!--<li>
-					<img class="usr_avatar" src="public/images/person/null.jpg" />
-					<span class="usr_name whiteColor">童话镇</span>
-					<img class="usr_vest" src="public/images/person/visitor.png" />
-				</li>
-				<li>
-					<img class="usr_avatar" src="public/images/person/null.jpg" />
-					<span class="usr_name whiteColor">安徒生</span>
-					<img class="usr_vest" src="public/images/person/visitor.png" />
-				</li>
-				<li>
-					<img class="usr_avatar" src="public/images/person/null.jpg" />
-					<span class="usr_name whiteColor">格林</span>
-					<img class="usr_vest" src="public/images/person/visitor.png" />
-				</li>
-				<li>
-					<img class="usr_avatar" src="public/images/person/null.jpg" />
-					<span class="usr_name whiteColor">伊索</span>
-					<img class="usr_vest" src="public/images/person/visitor.png" />
-				</li>-->
-			</ul>
+			<div id="vip-list">
+				
+				<ul id="vip-box">
+					<!--<li>
+						<img class="usr_avatar" src="public/images/person/null.jpg" />
+						<span class="usr_name whiteColor">童话镇</span>
+						<img class="usr_vest" src="public/images/person/visitor.png" />
+					</li>-->
+				</ul>
+				<div id="vip-scroll" class="scroll-wrap">
+					<span id="vip-roll" class="scroll-line"></span>
+				</div>
+			</div>
 			
 			<!--私聊管理-->
 			<div id="private-chat" class="radiusBorder">
@@ -136,7 +121,7 @@
 							<span>对话</span>
 							<span id="speakerB" class="orangeBk" title="">私聊请点击用户ID</span>
 						</p>
-						<div class="private-talk">
+						<div id="private-talk">
 							<ul id="private-list">
 								<li class="left-user private-session">
 									<p><label>你的微笑</label></p>
@@ -147,6 +132,12 @@
 									<p class="private-content"><span>你吃午饭了吗sahkjsdhfkjasfhjks </span></p>
 								</li>
 							</ul>
+							
+							<div id="private-scroll" class="scroll-wrap">
+								<span id="private-roll" class="scroll-line"></span>
+							</div>
+							
+							
 						</div>
 						<div id="private-input">
 							<input id="private-message" type="text" value="" name="private-words" class="tsnSixBk whiteColor" />
@@ -191,7 +182,7 @@
 								 	12-10 12:30
 								 </i>
 							</p>
-							<div class="usrWords whiteColor">
+							<div class="usraim usrWords whiteColor">
 								新来的朋友有兴趣的可扫描二维码，或者直接在浏览器里登录我们的网址，然后就可以注册，有问题请咨询QQ客服哦！
 							</div>
 						</div>
@@ -216,22 +207,210 @@
 							</div>
 						</div>
 					</li>
-					
+					<li>
+						<div class="usrPic">
+							<img class="avatar" src="public/images/person/null.jpg" alt="头像" />
+							<img class="vest" src="public/images/person/vest8.png" />
+						</div>
+						<div class="usrContent">
+							<p>
+								<span class="usrName whiteColor">
+									中国福利彩票
+								</span>
+								 <i class="recordTime tsnBk">
+								 	12-10 12:30
+								 </i>
+							</p>
+							<div class="usraim usrWords whiteColor">
+								新来的朋友有兴趣的可扫描二维码，或者直接在浏览器里登录我们的网址，然后就可以注册，有问题请咨询QQ客服哦！
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="usrPic">
+							<img class="avatar" src="public/images/person/null.jpg" alt="头像" />
+							<img class="vest" src="public/images/person/vest8.png" />
+						</div>
+						<div class="usrContent">
+							<p>
+								<span class="usrName whiteColor">
+									中国福利彩票
+								</span>
+								 <i class="recordTime tsnBk">
+								 	12-10 12:30
+								 </i>
+							</p>
+							<div class="usrWords whiteColor">
+								新来的朋友有兴趣的可扫描二维码，或者直接在浏览器里登录我们的网址，然后就可以注册，有问题请咨询QQ客服哦！
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="usrPic">
+							<img class="avatar" src="public/images/person/null.jpg" alt="头像" />
+							<img class="vest" src="public/images/person/vest8.png" />
+						</div>
+						<div class="usrContent">
+							<p>
+								<span class="usrName whiteColor">
+									中国福利彩票
+								</span>
+								 <i class="recordTime tsnBk">
+								 	12-10 12:30
+								 </i>
+							</p>
+							<div class="usrWords whiteColor">
+								新来的朋友有兴趣的可扫描二维码，或者直接在浏览器里登录我们的网址，然后就可以注册，有问题请咨询QQ客服哦！
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="usrPic">
+							<img class="avatar" src="public/images/person/null.jpg" alt="头像" />
+							<img class="vest" src="public/images/person/vest8.png" />
+						</div>
+						<div class="usrContent">
+							<p>
+								<span class="usrName whiteColor">
+									中国福利彩票
+								</span>
+								 <i class="recordTime tsnBk">
+								 	12-10 12:30
+								 </i>
+							</p>
+							<div class="usrWords whiteColor">
+								新来的朋友有兴趣的可扫描二维码，或者直接在浏览器里登录我们的网址，然后就可以注册，有问题请咨询QQ客服哦！
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="usrPic">
+							<img class="avatar" src="public/images/person/null.jpg" alt="头像" />
+							<img class="vest" src="public/images/person/vest8.png" />
+						</div>
+						<div class="usrContent">
+							<p>
+								<span class="usrName whiteColor">
+									中国福利彩票
+								</span>
+								 <i class="recordTime tsnBk">
+								 	12-10 12:30
+								 </i>
+							</p>
+							<div class="usrWords whiteColor">
+								新来的朋友有兴趣的可扫描二维码，或者直接在浏览器里登录我们的网址，然后就可以注册，有问题请咨询QQ客服哦！
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="usrPic">
+							<img class="avatar" src="public/images/person/null.jpg" alt="头像" />
+							<img class="vest" src="public/images/person/vest8.png" />
+						</div>
+						<div class="usrContent">
+							<p>
+								<span class="usrName whiteColor">
+									中国福利彩票
+								</span>
+								 <i class="recordTime tsnBk">
+								 	12-10 12:30
+								 </i>
+							</p>
+							<div class="usrWords whiteColor">
+								新来的朋友有兴趣的可扫描二维码，或者直接在浏览器里登录我们的网址，然后就可以注册，有问题请咨询QQ客服哦！
+							</div>
+						</div>
+					</li><li>
+						<div class="usrPic">
+							<img class="avatar" src="public/images/person/null.jpg" alt="头像" />
+							<img class="vest" src="public/images/person/vest8.png" />
+						</div>
+						<div class="usrContent">
+							<p>
+								<span class="usrName whiteColor">
+									中国福利彩票
+								</span>
+								 <i class="recordTime tsnBk">
+								 	12-10 12:30
+								 </i>
+							</p>
+							<div class="usrWords whiteColor">
+								新来的朋友有兴趣的可扫描二维码，或者直接在浏览器里登录我们的网址，然后就可以注册，有问题请咨询QQ客服哦！
+							</div>
+						</div>
+					</li><li>
+						<div class="usrPic">
+							<img class="avatar" src="public/images/person/null.jpg" alt="头像" />
+							<img class="vest" src="public/images/person/vest8.png" />
+						</div>
+						<div class="usrContent">
+							<p>
+								<span class="usrName whiteColor">
+									中国福利彩票
+								</span>
+								 <i class="recordTime tsnBk">
+								 	12-10 12:30
+								 </i>
+							</p>
+							<div class="usrWords whiteColor">
+								新来的朋友有兴趣的可扫描二维码，或者直接在浏览器里登录我们的网址，然后就可以注册，有问题请咨询QQ客服哦！
+							</div>
+						</div>
+					</li><li>
+						<div class="usrPic">
+							<img class="avatar" src="public/images/person/null.jpg" alt="头像" />
+							<img class="vest" src="public/images/person/vest8.png" />
+						</div>
+						<div class="usrContent">
+							<p>
+								<span class="usrName whiteColor">
+									中国福利彩票
+								</span>
+								 <i class="recordTime tsnBk">
+								 	12-10 12:30
+								 </i>
+							</p>
+							<div class="usrWords whiteColor">
+								新来的朋友有兴趣的可扫描二维码，或者直接在浏览器里登录我们的网址，然后就可以注册，有问题请咨询QQ客服哦！
+							</div>
+						</div>
+					</li><li>
+						<div class="usrPic">
+							<img class="avatar" src="public/images/person/null.jpg" alt="头像" />
+							<img class="vest" src="public/images/person/vest8.png" />
+						</div>
+						<div class="usrContent">
+							<p>
+								<span class="usrName whiteColor">
+									中国福利彩票
+								</span>
+								 <i class="recordTime tsnBk">
+								 	12-10 12:30
+								 </i>
+							</p>
+							<div class="usrWords whiteColor">
+								新来的朋友有兴趣的可扫描二维码，或者直接在浏览器里登录我们的网址，然后就可以注册，有问题请咨询QQ客服哦！
+							</div>
+						</div>
+					</li>
 				</ul>
-					
+				<div id="message-scroll">
+					<div id="message-line"></div>
+					<div id="message-roll"></div>
+				</div>	
 			</div>
 			
 			<!--声明-->
 			<div id="statment" class="radiusBorder">
 				<div class="statContent whiteColor">您好，本平台是与官网合作的福彩平台，官网统一开奖，福彩快三 有兴趣的朋友可以在此群研究！</div>
-				<div class="playerChoice">
+				<!--<div class="playerChoice">
 					<span class="whiteColor glyphicon glyphicon-hand-right">新手帮助</span>
 					<div class="room-group">
 						<span id="room1" class="room active" title="1">房间一</span>
 						<span id="room2" class="room" title="2">房间二</span>						
 						<span id="room3" class="room" title="3">房间三</span>
 					</div>
-				</div>
+				</div>-->
 				<div class="emoticon">
 					<div class="btn-group dropup">
 						<button id="emoticon-pack" type="button" class="btn dropdown-toggle" data-toggle="dropdown"> 
@@ -271,6 +450,7 @@
 			<div id="winLanmu">
 				<a href="#/reward" class="redBk"><span class="glyphicon glyphicon-play-circle"></span>开奖直播</a>
 				<a href="#/vedio"><span class="glyphicon glyphicon-facetime-video"></span>美女视频</a>
+				<a href="#/movie"><span class="glyphicon glyphicon-facetime-video"></span>电影列表</a>
 			</div>
 			<div id="vedioContent" class="tsnBk">
 				<div ng-view></div>
@@ -401,15 +581,46 @@
 </div>
 
 
+<!--<div class="m">
+		<video id="my-video" class="video-js" controls preload="auto" width="740" height="400"
+		  poster="m.png" data-setup="{}">
+			<source id="movie-src" src="" type="video/mp4">
+			<p class="vjs-no-js">
+			  To view this video please enable JavaScript, and consider upgrading to a web browser that
+
+			</p>
+		  </video>
+		  <script src="js/video.min.js"></script>	
+		  <script type="text/javascript">
+			var myPlayer = videojs('my-video');
+			videojs("my-video").ready(function(){
+				var myPlayer = this;
+				myPlayer.play();
+			});
+		</script>
+	</div>-->
+<!--poster="m.png"-->
+<div id="movie-wrap">
+	<video id="movie-content" controls preload="auto" width="740" >
+		
+		<source type="video/mp4" src="http://dev.sex.com/download/2017-12-16/bedc83f5b686a13ba8ec0f45dda1c068.mp4"></source>
+		
+	</video>
+	
+	<div id="movie-close"></div>
+</div>
 
 
 
 <script type="text/javascript" src="static/js/controlStyle.js" ></script>
-<!--<script type="text/javascript" src="static/js/socket.js"></script>-->
 <script type="text/javascript" src="static/js/remind.js"></script>
-<script type="text/javascript" src="static/js/chat.js"></script>
 
 <script type="text/javascript" src="static/js/checkin.js"></script>
+
+<script type="text/javascript" src="../static/js/movie.js"></script>
+
+<script type="text/javascript" src="static/js/scroll_private.js"></script>
+
 
 
 </body>

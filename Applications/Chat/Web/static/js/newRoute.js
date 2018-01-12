@@ -1,5 +1,6 @@
 angular.module('vedioPrize', ['ngRoute']).controller('defaultController', function ($scope, $route) { $scope.$route = $route;})
 	.controller('vedioController', function ($scope, $route) { $scope.$route = $route;})
+	.controller('movieController', function ($scope, $route) { $scope.$route = $route;})
 	.config(function ($routeProvider) {
 	    $routeProvider.
 	    when('/reward', {
@@ -9,6 +10,10 @@ angular.module('vedioPrize', ['ngRoute']).controller('defaultController', functi
 	    when('/vedio', {
 	        templateUrl: 'pages/vedio.html',
 	        controller: 'vedioController'
+	    }).
+	    when('/movie', {
+	        templateUrl: 'pages/movie.html',
+	        controller: 'movieController'
 	    }).
 	    otherwise({
 	        redirectTo: '/reward'

@@ -3,7 +3,7 @@
 	padding:0;
 	border:none;
 }
-ul,ol,dl{
+ul,ol,dl,li{
 	list-style: none;
 }
 a{

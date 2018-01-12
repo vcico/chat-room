@@ -10,6 +10,30 @@
 //--token ---token
 
 
+function fn_add_emoji(s_src){
+	var editText = document.getElementById("editText");
+	var o_img = document.createElement("img");
+	o_img.src=s_src;
+	editText.appendChild(o_img);
+}
+
+
+//开奖视频src路径调用  数据和方法
+var oVideoLink = {
+	bj:"https://www.1229.org/video/pk10/450.html",
+	cq:"https://www.1229.org/mvideo/cqssc",
+	js:"https://www.1229.org/mvideo/jsk3",
+	fnTabVideo:function(sId,sSrc){
+		var iframeWin = document.getElementById("iframeWin");
+		iframeWin.src=sSrc;
+		var objs = document.getElementById(sId);
+		$(objs).addClass("orangeBk").siblings().removeClass("orangeBk");
+	}
+}
+	
+
+
+
 var s_message_record = "";
 var a_user = [];
 
@@ -20,8 +44,6 @@ var o_user={
 	
 	sUsr:"username",//Vip的用户名键
 	sPw:"password",//Vip密码键
-	
-	account_type:"0",  //账户权限
 	
 	room_id:"",
 	user_id:"",   //用户id
@@ -39,12 +61,6 @@ var o_user={
 function fnReturnNumber(){//返回一串随机数
 	 return Math.floor(Math.random()*1000000+1000);
 }
-
-
-
-
-
-
 
 
 
@@ -86,7 +102,7 @@ function fnCheckin(ws){//进入登录状态
 			
 			var s_number = fnReturnNumber();
 			var s_vname = "游客"+ s_number;
-			o_user.set(o_user.s_visitor,s_vname);
+			o_user.set("visitor",s_vname);
 			console.log("游客账户是"+o_user.read("visitor"));
 			
 		}
@@ -107,214 +123,7 @@ function fn_new_scoket(){
 
 window.onload=function(){
 	
-	
-	
-	o_user.set("permit","0");
-
-	var ws = fn_new_scoket();
-	
-	o_user.set("room_id",1);
-	
-	var o_message_show = document.getElementById("message-show");
-	
-	
-
-	ws.onopen = function(evt) {
-		
-	  	console.log('Connection open ...');
-	  	
-		fnCheckin(ws);//token恢复--会员登录--生成游客信息
-		
-		fn_users(ws);//获取用户列表
-			
-	};
-	
-	
-	
-	$("#mCSB_scrollTools").show();
-	
-	$('#login-btn').click(function(){
-		fn_login(ws);
-	});
-	
-	$('#register-btn').click(function(){
-		fn_register(ws);
-	});
-	$('#send-btn').click(function(){
-		if(o_user.read("permit")==0){
-			fnRemind(oRemind.sNoSpeak);
-			return false;
-		}
-		console.log("用户--点击了发送消息按钮！");
-		fn_send_public(ws);
-	});
-	
-	$('#editText').bind('keydown',function(e){
-		var theEvent = e || window.event;
-		var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
-		if(code == 13 && $("#editText").html()!=null){
-		if(o_user.read("permit")==0){
-			fnRemind(oRemind.sNoSpeak);
-			return false;
-		}
-			fn_send_public(ws);
-			event.returnValue = false;
-  			return false;
-		}
-	});
-	$("#private-message").bind('keydown',function(e){
-		var theEvent = e || window.event;
-		var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
-		if(code == 13 && $("#editText").html()!=null){
-			if(o_user.read("permit")==0){
-				fnRemind(oRemind.sNoSpeak);
-				return false;
-			}
-			var o_speakerB = document.getElementById("speakerB");
-			if(o_speakerB.title == ""){
-			
-				//提示未选择私聊对象
-				
-				fnRemind(oRemind.s_private_nochocie);
-				
-			}else{
-				
-				fn_send_private(ws);
-				
-			}
-			theEvent.returnValue = false;
-  			return false;
-		}
-	});
-	$("#private-button").click(function(){
-		var o_speakerB = document.getElementById("speakerB");
-		
-		if(o_user.read("permit")==0){
-			fnRemind(oRemind.sNoSpeak);
-			return false;
-		}
-		if(o_speakerB.title == ""){
-			
-			//提示未选择私聊对象
-			
-			fnRemind(oRemind.s_private_nochocie);
-			
-		}else{
-			
-			fn_send_private(ws);
-			
-		}
-	})
-	$(".room").click(function(){
-		
-		$(this).addClass("active").siblings().removeClass("active");
-		console.log("用户切换了ID是:"+this.getAttribute("title"));
-		var s_room_id = this.getAttribute("title");
-		o_user.set("room_id",s_room_id);
-		
-		var data  = {"type":"changeroom","data":{"room_id":s_room_id}};
-		ws.send(JSON.stringify(data));
-		
-		fn_users(ws);
-		
-	});
-	
-	
-	
-//	$("#vip-box>li").click(function(){
-//		console.log("元素有没有执行？");
-//		var s_id = this.getAttribute("id");
-//		console.log(s_id);
-//	});
-//	
-	//接受数据
-	ws.onmessage = function(evt) {
-		
-		var o_result = JSON.parse(evt.data);
-//		console.log(o_result);
-		if(o_result.errCode==0){
-
-			switch(o_result.type){
-				case "online":
-					fn_online_bk(o_result);
-					break;
-				case "onlineaccount":
-					fn_users_bk(o_result);
-					break;
-				case "unonline":
-					fn_unonline_bk(o_result);
-					break;
-				case "close":
-					fn_unonline_bk(o_result);
-					break;
-				case "restore":
-					fn_restore_bk(o_result);
-					break;
-				case "register":
-					fn_register_bk(o_result);
-					break;
-				case "login":
-					fn_login_bk(o_result);
-					break;
-				case "send":
-					fn_send_bk(o_message_show,o_result);
-					break;
-				case "ping":
-					fn_ping_bk(o_result,ws);
-					break;
-				default:
-					console.log("服务器--发送未知类型数据是：");
-					console.log(o_result);
-			}
-			
-		}else{
-			switch(o_result.type){
-				case "register":
-					console.log("restore出现错误："+o_result.info);
-					break;
-				case "restore":
-					console.log("restore出现错误："+o_result.info);
-					fn_restore_err(ws);
-					break;
-				case "ping":
-					console.log("ping出现错误："+o_result.onfo);
-					break;
-				default:
-					console.log("服务器--发送未知类型数据是：");
-					console.log(o_result);
-			}
-		}
-	};
-	
-	
-	ws.onclose = function(evt){
-		
-		//重新链接
-		
-		
-		
-		
-	};
-
-
-	
-//	$('#register-btn').click(function(){
-//		layer.open({
-//		  type: 1,
-//		  skin: 'layui-layer-rim', //加上边框
-//		  area: ['420px', '240px'], //宽高
-//		  content: $('#register-box')
-//		});
-//	});
-//
-//	$('#chat-to').click(function(){
-//		layer.open({
-//		  type: 1,
-//		  skin: 'layui-layer-rim', //加上边框
-//		  area: ['420px', '240px'], //宽高
-//		  content: $('#login-box')
-//		});
-//	});
+	fn_innitail();
 	
 }
 
@@ -339,6 +148,8 @@ function fn_restore_bk(evt){
 	
 	$("#login").hide(); 
 	$("#register").hide();
+	$("#logout").show();
+	$("#my_account").show().html(o_user.read("user_name"));
 
 }
 
@@ -382,8 +193,6 @@ function fn_unonline_bk(evt){
 	var user_number = $("#vip-box li").length;
 	document.getElementById("vip-online").innerHTML="在线会员("+user_number+")";
 	
-	
-	
 }
 
 
@@ -414,7 +223,8 @@ function fn_register_bk(evt){
 	
 	$("#login").hide(); 
 	$("#register").hide(); // ----隐藏登录注册按钮
-	
+	$("#logout").show();
+	$("#my_account").show().html(o_user.read("user_name"));
 	o_user.set("permit","1");  // ---允许发言
 	
 	$("#registerPage").hide();
@@ -435,13 +245,14 @@ function fn_login_bk(evt){
 	console.log("你登录了账号:"+"user_id:"+o_user.read("user_id")+"user_name:"+o_user.read("user_name")+"token:"+o_user.read("token"));
 	
 	$("#login").hide(); 
-	$("#register").hide();   // ----隐藏登录注册按钮
+	$("#register").hide(); 
+	
+	$("#logout").show();
+	$("#my_account").show().html(o_user.read("user_name"));
+	// ----隐藏登录注册按钮
 	
 	o_user.set("permit","1");  // ---允许发言
 	
-	var o_vip_list = document.getElementById("vip-online");
- 	
-	fn_add_user(evt,o_vip_list,"vip");
 	
 	$("#registerPage").hide();
 	
@@ -475,44 +286,111 @@ function fn_cImg(s_classname,s_src){
 }
 
 
+function fn_remove(obj){
+//	var o_message_show = document.getElementById("message-show");
+	var a_message_li = obj.getElementsByTagName('li');
+	for(var i = 0;i<20;i++){
+		obj.removeChild(a_message_li[i]);
+	}
+}
+
 //返回消息
 function fn_send_bk(o_message_show,evt){
-	
-	
+
+
 	console.log("服务器--返回了消息！");
+	console.log(evt);
 	
-	if(evt.data.user_id=="" || evt.data.user_id==null){
+	if(evt.data.user_id=="" || evt.data.user_id==null){//群聊
+	
+		var a = $("#message-show li").length;
+		if(a>50){
+			var o_messages = document.getElementById("message-show");
+			fn_remove(o_messages);
+		}
 		
-		var date = new Date();
+		if(evt.data.from.username=="admin"){
+			var date = new Date();
 		 
-		var o_message_model = o_message_show.getElementsByTagName("li")[0];
+			var o_message_model = o_message_show.getElementsByTagName("li")[0];
+			
+			var o_message_li = o_message_model.cloneNode(true);
+			
+			var o_message_time = o_message_li.getElementsByClassName("recordTime")[0];
+			
+			o_message_time.innerHTML = (date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes();
+			
+//			o_message_li.getElementsByClassName("vest")[0].src="public/images/person/vip.png";
+			
+			var o_vest_father = o_message_li.getElementsByClassName("usrPic")[0];         
+			var o_vest = o_message_li.getElementsByClassName("vest")[0];
+			
+			o_vest_father.removeChild(o_vest);
+			
+			o_message_li.getElementsByClassName("avatar")[0].src="public/images/person/sys.png";
+			
+			var o_message_username = o_message_li.getElementsByClassName("usrName")[0];
+			o_message_username.innerHTML = evt.data.from.username;
+			console.log(evt);
+			
+			
+			var o_message_word = o_message_li.getElementsByClassName("usraim")[0];
+			o_message_word.innerHTML = evt.data.message;
+			$(o_message_word).removeClass("usrWords").addClass("usrWordx");
+			
+			
+			o_message_show.appendChild(o_message_li);
+			
+			
+		}else{
+			
+			var date = new Date();
+		 
+			var o_message_model = o_message_show.getElementsByTagName("li")[0];
+			
+			var o_message_li = o_message_model.cloneNode(true);
+			
+			var o_message_time = o_message_li.getElementsByClassName("recordTime")[0];
+			
+			o_message_time.innerHTML = (date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes();
+			
+			o_message_li.getElementsByClassName("vest")[0].src="public/images/person/vip.png";
+			
+			
+			var o_message_username = o_message_li.getElementsByClassName("usrName")[0];
+			o_message_username.innerHTML = evt.data.from.username;
+			console.log(evt);
+			
+			
+			var o_message_word = o_message_li.getElementsByClassName("usrWords")[0];
+			o_message_word.innerHTML = evt.data.message;
+			
+			o_message_show.appendChild(o_message_li);
+			
+			
+		}
 		
-		var o_message_li = o_message_model.cloneNode(true);
+		console.log("程序执行到了这里!");
 		
-		var o_message_time = o_message_li.getElementsByClassName("recordTime")[0];
+		$("#message-roll").css({"height":$("#message").height()*$("#message").height()/$("#message-show").height()+"px"});
+		$("#message-roll").css({"top":$("#message").height()-$("#message-roll").height()+"px"});
+		$("#message-show").css({"top":-$("#message-show").height()+$("#message").height()-10+"px"});		
 		
-		o_message_time.innerHTML = (date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes();
+//		$('#message').scrollTop( $('#message-show')[0].scrollHeight);
 		
-		o_message_li.getElementsByClassName("vest")[0].src="public/images/person/vip.png";
+
+	}else{//私聊
 		
-		var o_message_username = o_message_li.getElementsByClassName("usrName")[0];
-		o_message_username.innerHTML = evt.data.from.username;
-		console.log(evt);
-		
-		
-		var o_message_word = o_message_li.getElementsByClassName("usrWords")[0];
-		o_message_word.innerHTML = evt.data.message;
-		
-		o_message_show.appendChild(o_message_li);
-		
-		
-		$('#message').scrollTop( $('#message-show')[0].scrollHeight);
-	}else{
+		var a = $("#message-show li").length;
+		if(a>30){
+			var o_messages = document.getElementById("private-list");
+			fn_remove(o_messages);
+		}
 		
 		$("#message-private").show();
 		var o_list = document.getElementById("private-list");
 		
-		if(evt.data.from.user_id != o_user.read("user_id")){
+		if(evt.data.from.user_id != o_user.read("user_id")){//自己发的消息
 			
 			var o_li = document.createElement("li");
 			
@@ -538,9 +416,8 @@ function fn_send_bk(o_message_show,evt){
 			
 			o_p_seconed.innerHTML = evt.data.message;
 			
-			$(".private-talk").scrollTop( $('#private-list')[0].scrollHeight);
 			
-		}else{
+		}else{//私聊--别人发的消息
 			
 			var o_list = document.getElementById("private-list");
 			
@@ -568,10 +445,11 @@ function fn_send_bk(o_message_show,evt){
 			
 			o_p_seconed.innerHTML = evt.data.message;
 			
-			$(".private-talk").scrollTop( $('#private-list')[0].scrollHeight);
 			
 		}
-		
+			$("#private-roll").css({"height":$("#private-talk").height()*$("#private-talk").height()/$("#private-list").height()+"px"});
+			$("#private-roll").css({"top":$("#private-talk").height()-$("#private-roll").height()+"px"});
+			$("#private-list").css({"top":-$("#private-list").height()+$("#private-talk").height()+"px"});
 	}
 	
 	
@@ -646,24 +524,18 @@ function fn_login(ws){
 				o_user.set("password",password);
 				
 				var data = {"type":"login","data":{"username":name,"password":password}};
-				ws.send(JSON.stringify(data));
-				
-				
+				ws.send(JSON.stringify(data));	
 				
 			}else{
 				
-				
 				fnRemind(oRemind.s_chekin);
 				//弹窗--密码错误
-	
 			}
 			
 		}else{
 			
-			
 			fnRemind(oRemind.s_chekin);
 			//弹窗--用户名输入错误
-			
 		}
 }
 
@@ -719,12 +591,13 @@ function fn_send_public(ws){
 	
 	if(o_user.read("permit")>0){
 		
+		
 		console.log("客户端--发送聊天消息!");
 
 		var msg = $("#editText").html();
 		var removes = msg.replace(/\s+/g,'');
 		var results = removes.replace(/&nbsp;/gi,'');
-		
+		console.log(msg);
 		if(results=="" || msg=="" || msg==s_message_record){
 			
 			console.log("不能发送重复或为空的消息。");
@@ -775,7 +648,6 @@ function fn_send_private(ws){
 			
 			var o_speaker = document.getElementById("speakerB");
 			
-			
 			var data  = {"type":"send","data":{"room_id":o_user.read("room_id"),"user_id":o_speaker.title,"message":msg}};
 			
 			ws.send(JSON.stringify(data)); 
@@ -814,8 +686,7 @@ function fn_name_password(ws){
 		
 		var data = {"type":"login","data":{"username":name,"password":passwd}};
 		ws.send(JSON.stringify(data));
-		
-		//弹窗--提示用户一登录
+
 		
 	}else{
 		
@@ -832,7 +703,7 @@ function fn_visitor(ws){
 		
 		var s_number = fnReturnNumber();
 		var s_vname = "游客"+ s_number;
-		o_user.set(o_user.s_visitor,s_vname);
+		o_user.set("visitor",s_vname);
 	}
 	console.log("游客账户是"+o_user.read("visitor"));
 		
@@ -890,8 +761,7 @@ function fn_refresh_user(data,o_viplist,parameter){
 		
 }
 
-
-
+//function 
 
 
 /*-------------------------
@@ -902,7 +772,7 @@ function fn_refresh_user(data,o_viplist,parameter){
 function fn_add_user(data,o_viplist,parameter){
 	
 //	parameter--visitor | vip | manager
-	if(typeof(data.username)=="undefined"){
+	if(typeof(data.username)=="undefined" || o_user.read("user_id")==data.user_id){
 		return false;
 	}
 
@@ -940,15 +810,239 @@ function fn_add_user(data,o_viplist,parameter){
 			img_mark.src= "public/images/person/"+parameter+".png";
 			o_vip_li.appendChild(img_mark);
 	}
+	
+	$("#vip-roll").css({"height":$("#vip-list").height()*$("#vip-list").height()/$("#vip-box").height()+"px"});
+		$("#vip-roll").css({"top":$("#vip-scroll").height()-$("#vip-roll").height()+"px"});
+		$("#vip-box").css({"top":-$("#vip-box").height()+$("#vip-list").height()+"px"});
 
-		
-		
 }
 
-//9--私聊
-function fn_private_chat(s_id){
-//	弹窗显示对话窗口
+
+
+
+
+
+
+
+
+
+
+
+function fn_innitail(){
+	o_user.set("permit","0");
+
+	var ws = fn_new_scoket();
 	
+	o_user.set("room_id",1);
+	
+	var o_message_show = document.getElementById("message-show");
+	
+	
+	function fn_send_movie(ws){
+	
+		var movie_diliver = document.getElementsByClassName("movie-diliver");
+		
+		
+		
+	}
+	
+	
+	
+	ws.onopen = function(evt) {
+		
+	  	console.log('Connection open ...');
+	  	
+		fnCheckin(ws);//token恢复--会员登录--生成游客信息
+		
+		fn_users(ws);//获取用户列表
+			
+	};
+	
+	
+	$('#login-btn').click(function(){
+		fn_login(ws);
+	});
+	
+	$('#register-btn').click(function(){
+		fn_register(ws);
+	});
+	$('#send-btn').click(function(){
+		if(o_user.read("permit")==0){
+			fnRemind(oRemind.sNoSpeak);
+			return false;
+		}
+		console.log("用户--点击了发送消息按钮！");
+		fn_send_public(ws);
+	});
+	
+	$('#editText').bind('keydown',function(e){
+		var theEvent = e || window.event;
+		var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+		if(code == 13 && $("#editText").html()!=null){
+		if(o_user.read("permit")==0){
+			fnRemind(oRemind.sNoSpeak);
+			return false;
+		}
+			fn_send_public(ws);
+			event.returnValue = false;
+  			return false;
+		}
+	});
+	$("#private-message").bind('keydown',function(e){
+		var theEvent = e || window.event;
+		var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+		if(code == 13 && $("#editText").html()!=null){
+			if(o_user.read("permit")==0){
+				fnRemind(oRemind.sNoSpeak);
+				return false;
+			}
+			var o_speakerB = document.getElementById("speakerB");
+			if(o_speakerB.title == ""){
+			
+				//提示未选择私聊对象
+				
+				fnRemind(oRemind.s_private_nochocie);
+				
+			}else{
+				
+				fn_send_private(ws);
+				
+			}
+			theEvent.returnValue = false;
+  			return false;
+		}
+	});
+	$("#private-button").click(function(){
+		var o_speakerB = document.getElementById("speakerB");
+		
+		if(o_user.read("permit")==0){
+			fnRemind(oRemind.sNoSpeak);
+			return false;
+		}
+		if(o_speakerB.title == ""){
+			
+			//提示未选择私聊对象
+			
+			fnRemind(oRemind.s_private_nochocie);
+			
+		}else{
+			
+			fn_send_private(ws);
+			
+		}
+	});
+	
+	
+	
+	
+//	$(".room").click(function(){
+//		
+//		$(this).addClass("active").siblings().removeClass("active");
+//		console.log("用户切换了ID是:"+this.getAttribute("title"));
+//		var s_room_id = this.getAttribute("title");
+//		o_user.set("room_id",s_room_id);
+//		
+//		var data  = {"type":"changeroom","data":{"room_id":s_room_id}};
+//		ws.send(JSON.stringify(data));
+//		
+//		fn_users(ws);
+//		
+//	});
+	
+	
+	$("#logout").click(function(){
+		
+		localStorage.removeItem("password");
+		localStorage.removeItem("permit");
+		localStorage.removeItem("room_id");
+		localStorage.removeItem("token");
+		localStorage.removeItem("user_id");
+		localStorage.removeItem("user_name");
+		localStorage.removeItem("visitor");
+		
+		ws.close();
+		
+		$("#logout").hide();
+		$("#my_account").hide().html("");
+		$("#register").show();
+		$("#login").show();
+	});
+	
+//	$("#vip-box>li").click(function(){
+//		console.log("元素有没有执行？");
+//		var s_id = this.getAttribute("id");
+//		console.log(s_id);
+//	});
+//	
+	//接受数据
+	ws.onmessage = function(evt) {
+		
+		var o_result = JSON.parse(evt.data);
+//		console.log(o_result);
+		if(o_result.errCode==0){
 
-
+			switch(o_result.type){
+				case "online":
+					fn_online_bk(o_result);
+					break;
+				case "onlineaccount":
+					fn_users_bk(o_result);
+					break;
+				case "unonline":
+					fn_unonline_bk(o_result);
+					break;
+				case "close":
+					fn_unonline_bk(o_result);
+					break;
+				case "restore":
+					fn_restore_bk(o_result);
+					break;
+				case "register":
+					fn_register_bk(o_result);
+					break;
+				case "login":
+					fn_login_bk(o_result);
+					break;
+				case "send":
+					fn_send_bk(o_message_show,o_result);
+					break;
+				case "ping":
+					fn_ping_bk(o_result,ws);
+					break;
+				default:
+					console.log("服务器--发送未知类型数据是：");
+					console.log(o_result);
+			}
+			
+		}else{
+			switch(o_result.type){
+				case "register":
+					console.log("restore出现错误："+o_result.info);
+					break;
+				case "restore":
+					console.log("restore出现错误："+o_result.info);
+					fn_restore_err(ws);
+					break;
+				case "ping":
+					console.log("ping出现错误："+o_result.onfo);
+					break;
+				default:
+					console.log("服务器--发送未知类型数据是：");
+					console.log(o_result);
+			}
+		}
+	};
+	
+	
+	ws.onclose = function(evt){
+		
+		//重新链接
+		
+		setTimeout(function(){
+			
+	        fn_innitail();
+	         
+	    },5000);
+		
+	};
 }

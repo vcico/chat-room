@@ -5,22 +5,30 @@
 //页面元素尺寸调整
 function fnInitail(){
 	var n_w_width = $(window).width();
-	var n_w_heihgt = $(window).height();
+	var n_w_height = $(window).height();
 	
-	$("#registerForm").css({"left":(n_w_width-$("#registerForm").width())/2+"px"},{"top":(n_w_heihgt-$("#registerForm").height())/3+"px"});
+//	console.log(n_w_height);
+	$("#registerForm").css({"left":(n_w_width-$("#registerForm").width())/2+"px"},{"top":(n_w_height-$("#registerForm").height())/3+"px"});
 	
-	$("#message").css({"height":n_w_heihgt-$("#statment").height()-$("#editMessage").height()-110+"px"});
+	$("#message").css({"height":n_w_height-$("#statment").height()-$("#editMessage").height()-110+"px"});
 	
-	$("#vip-container").css({"height":n_w_heihgt-185+"px"});
+	$("#vip-container").css({"height":n_w_height-185+"px"});
 	
 	$("#chatting").css({"width":n_w_width-695+"px"});
 	
-	$("#vedioContent").css({"height":n_w_heihgt-325+"px"});
+	$("#vedioContent").css({"height":n_w_height-325+"px"});
 	
-	$("#alert-remind").css({"left":(n_w_width-$("#alert-remind").width())/2+"px"},{"top":(n_w_heihgt-$("#alert-remind").height())/3+"px"});
+	$("#alert-remind").css({"left":(n_w_width-$("#alert-remind").width())/2+"px"},{"top":(n_w_height-$("#alert-remind").height())/3+"px"});
 	
-//	$("#message-show").css({"min-height":n_w_heihgt-$("#statment").height()-$("#editMessage").height()-105+"px"})
+	$("#message-show").css({"min-height":n_w_height-$("#statment").height()-$("#editMessage").height()-105+"px"});
 	
+	$("#message-roll").css({"height":$("#message").height()*$("#message").height()/$("#message-show").height()+"px"});
+	
+	$("#movie-wrap").css({"left":((n_w_width-740)/2)+"px"},{"top":((n_w_height-$("#movie-content").height())/2)+"px"});
+	
+	$("#private-roll").css({"height":$("#private-talk").height()*$("#private-talk").height()/$("#private-list").height()});
+	
+	$("#vip-roll").css({"height":$("vip-list").height()*$("#vip-list").height()/$("#vip-box").height()});
 
 }
 fnInitail();
@@ -29,7 +37,7 @@ fnInitail();
 function fnTab(){
 	$("#vip-online").click(function(){
 		$(this).removeClass("whiteBk").addClass("whiteDisabledBk").next().removeClass("whiteDisabledBk").addClass("whiteBk"); 
-		$("#vip-box").show().next().hide();
+		$("#vip-list").show().next().hide();
 	});
 	$("#chat-admin").click(function(){
 		$(this).removeClass("whiteBk").addClass("whiteDisabledBk").prev().removeClass("whiteDisabledBk").addClass("whiteBk");
