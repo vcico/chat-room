@@ -965,7 +965,7 @@ div[ng-view]{
 	left: 350px;
 	background: url(../../public/images/pic/malert.png) no-repeat;
 	display: none;
-	z-index: 2;
+	z-index: 1000;
 }
 #alert-content{
 	width:335px;

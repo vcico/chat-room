@@ -77,19 +77,19 @@ function fnCheckin(ws){//进入登录状态
 	}else{
 		
 		//生成游客信息
-		
-		if(o_user.read("visitor")!=null && o_user.read("visitor").length>4){
-			
-		}else{
-			
-			console.log("生成了本地游客信息!");
-			
-			var s_number = fnReturnNumber();
-			var s_vname = "游客"+ s_number;
-			o_user.set("visitor",s_vname);
-			console.log("游客账户是"+o_user.read("visitor"));
-			
-		}
+//		
+//		if(o_user.read("visitor")!=null && o_user.read("visitor").length>4){
+//			
+//		}else{
+//			
+//			console.log("生成了本地游客信息!");
+//			
+//			var s_number = fnReturnNumber();
+//			var s_vname = "游客"+ s_number;
+//			o_user.set("visitor",s_vname);
+//			console.log("游客账户是"+o_user.read("visitor"));
+//			
+//		}
 	}
 }
 
@@ -164,26 +164,30 @@ function fn_unonline_bk(evt){
 	console.log(evt);
 	console.log("下线用户提醒");
 	console.log(evt.data.user_id);
+//	var o_user_list = document.getElementById("vip-box");
+//	var o_user_id  = o_user_list.getElementById(evt.data.user_id);
+//
 //	
-//	if(typeof(evt.data.user_id) == "undefined"){
-//		 return false;
+//	if(typeof(evt.data.user_id) != "undefined" && typeof(o_user_id)!="undefined"){
+//		
+//		o_user_list.removeChild(o_user_id);    
+//		
+//		for(x in a_user){
+//			if(evt.data.user_id == a_user[x]){
+//				a_user=a_user.slice(x+1);
+//			}
+//		}
+//		
 //	}
-	var o_user_id  = document.getElementById(evt.data.user_id);
-//	if(typeof(o_user_id)!="undefined"){
-//		 return false;
-//	}
-	
-	if(typeof(evt.data.user_id) == "undefined" && typeof(o_user_id)!="undefined"){
-		
-		var o_user_list = document.getElementById("vip-box");
-		o_user_list.removeChild(o_user_id);    
-		
-		for(x in a_user){
-			if(evt.data.user_id == a_user[x]){
-				a_user=a_user.slice(x+1);
-			}
+	for(x in a_user){
+		if(evt.data.user_id == a_user[x]){
+			a_user=a_user.slice(x+1);
+			
+			var o_user_list = document.getElementById("vip-box");
+			var o_user_id  = document.getElementById(evt.data.user_id);
+			o_user_list.removeChild(o_user_id);    
+			
 		}
-		
 	}
 	
 	
@@ -202,6 +206,8 @@ function fn_ping_bk(o_result,ws){
 	
 	var data = {"type":"ping","status":1};
 	ws.send(JSON.stringify(data));
+	
+	console.log(data);
 	
 }
 
@@ -261,6 +267,22 @@ function fn_login_bk(evt){
 	
 	$("#registerPage").hide();
 	
+	for(x in a_user){
+		if(evt.data.user_id == a_user[x]){
+			a_user=a_user.slice(x+1);
+			
+			var o_user_list = document.getElementById("vip-box");
+			var o_user_id  = document.getElementById(evt.data.user_id);
+			o_user_list.removeChild(o_user_id);    
+			
+		}
+	}
+	
+	
+	
+	
+	var user_number = $("#vip-box li").length;
+	document.getElementById("vip-online").innerHTML="在线会员("+user_number+")";
 }
 
 //返回用户列表
@@ -270,6 +292,7 @@ function fn_users_bk(evt){
 
 	var o_viplist = document.getElementById('vip-box');	
 	
+	o_viplist.innerHTML= "";
 	console.log(evt);
 
 	for(x in evt.data){
@@ -308,11 +331,11 @@ function fn_send_bk(o_message_show,evt){
 	
 	if(evt.data.user_id=="" || evt.data.user_id==null){//群聊
 	
-		var a = $("#message-show li").length;
-		if(a>50){
-			var o_messages = document.getElementById("message-show");
-			fn_remove(o_messages);
-		}
+//		var a = $("#message-show li").length;
+//		if(a>50){
+//			var o_messages = document.getElementById("message-show");
+//			fn_remove(o_messages);
+//		}
 		
 		if(evt.data.from.username=="admin"){
 			var date = new Date();
@@ -375,8 +398,6 @@ function fn_send_bk(o_message_show,evt){
 			
 		}
 		
-		console.log("程序执行到了这里!");
-		
 		$("#message-roll").css({"height":$("#message").height()*$("#message").height()/$("#message-show").height()+"px"});
 		$("#message-roll").css({"top":$("#message").height()-$("#message-roll").height()+"px"});
 		$("#message-show").css({"top":-$("#message-show").height()+$("#message").height()-10+"px"});		
@@ -386,9 +407,10 @@ function fn_send_bk(o_message_show,evt){
 
 	}else{//私聊
 		
-		var a = $("#message-show li").length;
-		if(a>30){
+		var a = $("#message-show>li");
+		if(a.length>30){
 			var o_messages = document.getElementById("private-list");
+			console.log("准备调用私聊移除程序！");
 			fn_remove(o_messages);
 		}
 		
@@ -531,7 +553,7 @@ function fn_login(ws){
 			}else{
 				
 				fnRemind(oRemind.s_chekin);
-				//弹窗--密码错误
+				//弹窗--密码错误\n
 			}
 			
 		}else{
@@ -612,6 +634,7 @@ function fn_send_public(ws){
 	
 			var data  = {"type":"send","data":{"room_id":o_user.read("room_id"),"user_id":"","message":msg}};
 			
+			console.log(data);
 			ws.send(JSON.stringify(data)); 
 			
 			$("#editText").html("");
@@ -695,19 +718,8 @@ function fn_name_password(ws){
 		
 	}
 }
-
-function fn_visitor(ws){
-	
-	if(o_user.read("visitor")==null){
-			
-		console.log("客户端 生成了本地游客信息!");
-		
-		var s_number = fnReturnNumber();
-		var s_vname = "游客"+ s_number;
-		o_user.set("visitor",s_vname);
-	}
-	console.log("游客账户是"+o_user.read("visitor"));
-		
+function fn_log_err(ws){
+	fnRemind(oRemind.s_chekin);
 }
 /*--------------------------
  *  错误处理 
@@ -888,8 +900,6 @@ function fn_innitail(){
 			}
 			var o_speakerB = document.getElementById("speakerB");
 			if(o_speakerB.title == ""){
-			
-				//提示未选择私聊对象
 				
 				fnRemind(oRemind.s_private_nochocie);
 				
@@ -923,28 +933,12 @@ function fn_innitail(){
 	});
 	
 	
-	
-	
-//	$(".room").click(function(){
-//		
-//		$(this).addClass("active").siblings().removeClass("active");
-//		console.log("用户切换了ID是:"+this.getAttribute("title"));
-//		var s_room_id = this.getAttribute("title");
-//		o_user.set("room_id",s_room_id);
-//		
-//		var data  = {"type":"changeroom","data":{"room_id":s_room_id}};
-//		ws.send(JSON.stringify(data));
-//		
-//		fn_users(ws);
-//		
-//	});
-	
+
 	
 	$("#logout").click(function(){
 		
 		localStorage.removeItem("password");
 		localStorage.removeItem("permit");
-		localStorage.removeItem("room_id");
 		localStorage.removeItem("token");
 		localStorage.removeItem("user_id");
 		localStorage.removeItem("user_name");
@@ -961,17 +955,12 @@ function fn_innitail(){
 		$("#login").show();
 	});
 	
-//	$("#vip-box>li").click(function(){
-//		console.log("元素有没有执行？");
-//		var s_id = this.getAttribute("id");
-//		console.log(s_id);
-//	});
-//	
+
 	//接受数据
 	ws.onmessage = function(evt) {
 		
 		var o_result = JSON.parse(evt.data);
-//		console.log(o_result);
+		console.log(o_result);
 		if(o_result.errCode==0){
 
 			switch(o_result.type){
@@ -1008,25 +997,25 @@ function fn_innitail(){
 			}
 			
 		}else{
+			
 			switch(o_result.type){
 				case "register":
-					console.log("restore出现错误："+o_result.info);
+					console.log("restore出现错误：");
 					break;
 				case "restore":
-					console.log("restore出现错误："+o_result.info);
+					console.log("restore出现错误：");
 					fn_restore_err(ws);
 					break;
 				case "login":
 					console.log("login出现错误：");
 					console.log(o_result);
-					fn_restore_err(ws);
+					fn_log_err(ws);
 					break;
 				case "ping":
-					console.log("ping出现错误："+o_result.onfo);
+					console.log("ping出现错误：");
 					break;
 				default:
 					console.log("服务器--发送未知类型数据是：");
-					console.log(o_result);
 			}
 		}
 	};
@@ -1040,7 +1029,7 @@ function fn_innitail(){
 			
 	        fn_innitail();
 	         
-	    },30000);
+	    },3000);
 		
 	};
 }
