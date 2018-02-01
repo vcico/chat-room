@@ -1,0 +1,3 @@
+<?php
+
+define('START',true);
