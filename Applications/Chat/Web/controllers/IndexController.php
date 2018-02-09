@@ -1,9 +1,7 @@
 <?php
-
-
 namespace Chat\Web\controllers;
 
-use JC;
+//use JC;
 use Chat\Web\core\BaseController;
 
 /**

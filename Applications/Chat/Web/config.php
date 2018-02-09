@@ -4,7 +4,7 @@ if(!defined('START'))  throw new Exception('',404);
 
 return [
 //	'core_path' => __dir__.'/core',
-	'controller_path' => __dir__.'/controllers',
+//	'controller_path' => __dir__.'/controllers',
 	'view_path' => __dir__.'/views',
         'controllerNamespace' => '\Chat\Web\controllers\%s',
         'urlManager' => [
