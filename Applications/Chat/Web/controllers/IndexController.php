@@ -15,5 +15,9 @@ class IndexController extends BaseController{
         $this->render('index', ['title' => 'title!!!!!!']);
     }
     
+    public function actionAbout()
+    {
+        echo 'this is about';
+    }
 
 }

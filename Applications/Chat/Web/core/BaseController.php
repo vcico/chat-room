@@ -11,10 +11,12 @@ use Chat\Web\core\exceptions\ViewNotFoundException;
  */
 abstract class BaseController {
    
+    public $module = null;
+    
     public function render($template,$params)
     {
         extract($params);
-        $__file = JC::getConfig('view_path').'/'. strtolower(substr(get_called_class(),strrpos(get_called_class(),'\\')+1,-10)).'/'.$template.'.php';
+        $__file = JC::getConfig('view_path').'/'.($this->module? $this->module.'/':''). strtolower(substr(get_called_class(),strrpos(get_called_class(),'\\')+1,-10)).'/'.$template.'.php';
         if(is_file($__file)){
             include $__file;
         }else{

@@ -6,11 +6,11 @@ return [
 //	'core_path' => __dir__.'/core',
 //	'controller_path' => __dir__.'/controllers',
 	'view_path' => __dir__.'/views',
-        'controllerNamespace' => '\Chat\Web\controllers\%s',
+        'controllerNamespace' => '\Chat\Web\controllers',
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => true,
         ],
+        'modules' => ['admin'],
 	'component' => [
 //            'mysql' => function(){
 //                return (new \Workerman\MySQL\Connection('localhost', 3306, 'root', '123456', 'chat_room'));

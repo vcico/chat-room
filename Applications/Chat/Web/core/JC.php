@@ -107,45 +107,51 @@ class JC {
     
     public static function getUrlParams()
     {
-//        print_r(self::$config);
         $urlManager = isset(self::$config['urlManager'])?self::$config['urlManager'] :false;
+        $module = '';
         if($urlManager && $urlManager['enablePrettyUrl']){
             $url = self::getUrl();
             if ($url[0] == '/') {
                 $url = substr($url, 1);
             }
-            if($urlManager['showScriptName']){
-                @list($file,$controller, $action) = explode('/', $url);
+            $urlPararms = explode('/', $url);
+            if(in_array($urlPararms[0],self::$config['modules'])){
+                @list($module,$controller, $action) = $urlPararms;
             }else{
-                list($controller, $action) = explode('/', $url);
+                @list($controller, $action) = $urlPararms;
             }
             $controller==''&& $controller = 'index';
             $action==''&& $action = 'index';
         }else{
-             $action = 'index';
+            $action = 'index';
             $controller = 'index';
+            isset($_GET['m']) && $module = trim($_GET['m']);
             isset($_GET['c']) && $controller = trim($_GET['c']);
             isset($_GET['a']) && $action = trim($_GET['a']);
         }
-        return [$controller,$action];
+        return [$module,$controller,$action];
     }
     
-    protected static function getController($controllerName)
+    protected static function getController($module,$controllerName)
     {
-        $controllerClass = sprintf(self::$config['controllerNamespace'],ucfirst($controllerName).'Controller');
-        if(class_exists($controllerClass)){
-            self::$_controllers[$controllerName] = new $controllerClass;;
-        }else{
-            throw new InvalidRouteException('controller not exists :'.$controllerClass);
+        $controllerKey = $module?$module.'-'.$controllerName:$controllerName;
+        $controllerClass = self::$config['controllerNamespace'].'\\'.($module?$module.'\\':'').ucfirst($controllerName).'Controller';
+        if(!isset(self::$_controllers[$controllerKey])){
+            if(class_exists($controllerClass)){
+                self::$_controllers[$controllerKey] = new $controllerClass;
+                $module && self::$_controllers[$controllerKey]->module = $module;
+            }else{
+                throw new InvalidRouteException('controller not exists :'.$controllerClass);
+            }
         }
-        return  self::$_controllers[$controllerName];
+        return  self::$_controllers[$controllerKey];
     }
 
 
     public function run()
     {
-        list($controller,$action) = self::getUrlParams();
-        $controllerObject = self::$_controllers[$controller]?:self::getController($controller);
+        list($module,$controller,$action) = self::getUrlParams();
+        $controllerObject = self::getController($module,$controller);
         $method = 'action'.ucfirst($action);
         if(!method_exists($controllerObject, $method)){
             throw new InvalidRouteException('controller action not exists:'.$method);
